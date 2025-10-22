@@ -21,8 +21,6 @@ Table of Contents
 - [Error Handling](#error-handling)
 - [Change Log](#change-log)
 
-## Overview
-Eight analytics endpoints provide KPIs and chart series for Programs. All are GET and accept optional filters.
 
 ## Endpoints
 
@@ -30,23 +28,31 @@ Eight analytics endpoints provide KPIs and chart series for Programs. All are GE
 Returns programs for filter dropdowns.
 
 Parameters
-- goalIds: List<Long> (optional)
 - ids: List<Long> (optional)
 
 Response (ProgramListFilterDto)
 ```json
 {
-  "data": [
-    {
-      "id": 37,
-      "name": { "ar": "...", "en": "..." },
-      "goalId": 12,
-      "goalName": { "ar": "...", "en": "..." },
-      "strategyId": 5,
-      "strategyName": { "ar": "...", "en": "..." }
-    }
-  ],
-  "totalCount": 1
+    "data": [
+        {
+            "id": 32,
+            "name": {
+                "en": "The national program to improve government services and simplify procedures",
+                "ar": "البرنامج الوطني لتحسين الخدمات الحكومية وتبسيط الإجراءات"
+            },
+            "goalId": 29,
+            "goalName": {
+                "en": "Enhancing the efficiency of providing government services and improving the experience of beneficiaries",
+                "ar": "تعزيز كفاءة تقديم الخدمات الحكومية وتحسين تجربة المستفيدين"
+            },
+            "strategyId": 5,
+            "strategyName": {
+                "en": "Strategic plan for institutional excellence and quality of services",
+                "ar": "الخطة الاستراتيجية للتميز المؤسسي وجودة الخدمات"
+            }
+        }
+    ],
+    "totalCount": 1
 }
 ```
 
