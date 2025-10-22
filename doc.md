@@ -1,50 +1,40 @@
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Program Analytics API
-Beautiful Reference & Charting Guide
+# Program Analytics API
+Beautiful, Organized Markdown Reference
+
 Last updated: 2025-10-22
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+- Base path: /analytics/program
+- Date format: ISO-8601 (YYYY-MM-DD)
+- Lists: CSV or repeated params (?programIds=10&programIds=20)
 
 Table of Contents
-1) Overview
-2) Endpoints Overview
-3) Usage Notes
-4) Error Handling
-5) Change Log
+- [Overview](#overview)
+- [Endpoints](#endpoints)
+  - [GET /list](#get-list)
+  - [GET /achievement-summary](#get-achievement-summary)
+  - [GET /budget-consumption](#get-budget-consumption)
+  - [GET /Initiative-summary](#get-initiative-summary)
+  - [GET /at-risk](#get-at-risk)
+  - [GET /performance-vs-target](#get-performance-vs-target)
+  - [GET /budget-vs-progress](#get-budget-vs-progress)
+  - [GET /progress-series](#get-progress-series)
+- [Error Handling](#error-handling)
+- [Change Log](#change-log)
 
-# Program Analytics API — Comprehensive Documentation
+## Overview
+Eight analytics endpoints provide KPIs and chart series for Programs. All are GET and accept optional filters.
 
-NOTE: This documentation has been migrated to PROGRAM_ANALYTICS_API.docx for Google Docs compatibility. If you are collaborating via Google Docs, use the .docx version. The Markdown version is retained here for reference.
+## Endpoints
 
-This document describes the 8 Program Analytics endpoints exposed under the /analytics/program namespace. It covers each endpoint’s purpose, request parameters, response structure, and example usage. All endpoints are GET and accept optional filters unless otherwise stated.
+### GET /list
+Returns programs for filter dropdowns.
 
-Base path prefix used below: /analytics/program
-
-Notes
-- Multi-tenant and authentication: This document only covers the analytics endpoints and their data contracts. Security/tenancy is configured at the application level.
-- Date parameters use ISO-8601 format (YYYY-MM-DD).
-- programIds, goalIds, ids are CSV lists when used from a browser; Spring also supports repeated parameters (e.g., ?programIds=10&programIds=20).
-
-Endpoints overview
-1. GET /list — Filter list of programs
-2. GET /achievement-summary — Program achievement headline + mini trend
-3. GET /budget-consumption — Budget consumption card per program
-4. GET /Initiative-summary — On-Time vs. Delayed Initiatives (program breakdown)
-5. GET /at-risk — Programs at Risk card
-6. GET /performance-vs-target — Program performance vs target card
-7. GET /budget-vs-progress — Monthly Budget Consumption vs Progress series
-8. GET /progress-series — Program Progress time-series (per program)
-
----
-
-1) GET /list
-Purpose
-Returns a list of programs for filter dropdowns, optionally filtered by goal IDs and/or program IDs.
-
-Query parameters
-- goalIds: List<Long> (optional) — Filter by Goal IDs (program direct parent)
-- ids: List<Long> (optional) — Filter by Program IDs
+Parameters
+- goalIds: List<Long> (optional)
+- ids: List<Long> (optional)
 
 Response (ProgramListFilterDto)
+```json
 {
   "data": [
     {
@@ -58,6 +48,7 @@ Response (ProgramListFilterDto)
   ],
   "totalCount": 1
 }
+```
 
 Examples
 - curl "{BASE}/analytics/program/list"
@@ -66,45 +57,41 @@ Examples
 
 ---
 
-2) GET /achievement-summary
-Purpose
-Aggregated current achievement, target planned, variance, mini-trend sparkline, and active programs count for the selected set of programs.
+### GET /achievement-summary
+Aggregated current achievement, target planned, variance, mini trend, and active programs count.
 
-Query parameters
-- programIds: List<Long> (optional) — If omitted, aggregates across all programs
+Parameters
+- programIds: List<Long> (optional)
 
 Response (ProgramAchievementSummaryDto)
+```json
 {
-  "currentAchievement": 0.35,           // 0..1, rounded to 2 decimals
-  "targetPlanned": 0.40,               // 0..1, rounded to 2 decimals
-  "variance": -0.05,                   // 0..1 (actual - planned), rounded to 2 decimals
-  "miniTrend": [                        // last 5 months average progress
-    { "date": "2025-06-01", "avgPercent": 0.31 },
-    ...
-  ],
+  "currentAchievement": 0.35,
+  "targetPlanned": 0.40,
+  "variance": -0.05,
+  "miniTrend": [ { "date": "2025-06-01", "avgPercent": 0.31 } ],
   "activeGoalsCount": 12
 }
-Notes
-- Percent fields are normalized to 0..1 and rounded to two decimals.
+```
 
 Example
 - curl "{BASE}/analytics/program/achievement-summary?programIds=10,20"
 
 ---
 
-3) GET /budget-consumption
-Purpose
-Provides a budget consumption card with per-program lines including budgets, spent, remaining, and consumption percentage.
+### GET /budget-consumption
+Budget consumption card with per-program lines.
 
-Query parameters
-- programIds: List<Long> (optional) — If omitted, includes all programs
+Parameters
+- programIds: List<Long> (optional)
 
 Response (ProgramBudgetConsumptionDto)
+```json
 {
   "totalBudget": 12000000.00,
   "totalSpent": 4800000.00,
   "totalRemaining": 7200000.00,
-  "consumptionPercentage": 40.00,       // percent 0..100 rounded to 2 decimals
+  "consumptionPercentage": 40.00,
   "activeGoalsCount": 8,
   "programs": [
     {
@@ -122,29 +109,30 @@ Response (ProgramBudgetConsumptionDto)
     }
   ]
 }
+```
 
 Example
 - curl "{BASE}/analytics/program/budget-consumption?programIds=37"
 
 ---
 
-4) GET /Initiative-summary
-Purpose
-On-Time vs Delayed Initiatives derived from initiatives under each program. Shows current and previous quarter aggregates with per-program breakdown.
+### GET /Initiative-summary
+On-Time vs Delayed Initiatives for programs (current vs previous quarter) with breakdown.
 
-Query parameters
+Parameters
 - programIds: List<Long> (optional)
 
 Response (ProgramMilestoneSummaryDto)
+```json
 {
   "onTimeInitiativesCurrent": 16,
   "delayedInitiativesCurrent": 15,
   "totalInitiativesCurrent": 31,
   "onTimeInitiativesPrevious": 20,
   "totalInitiativesPrevious": 35,
-  "onTimeRateChangePercent": -33.0,     // percentage change vs previous on-time rate
-  "currentOnTimeRate": 51.6,            // % in current quarter
-  "previousOnTimeRate": 57.1,           // % in previous quarter
+  "onTimeRateChangePercent": -33.0,
+  "currentOnTimeRate": 51.6,
+  "previousOnTimeRate": 57.1,
   "activeProgramsCount": 14,
   "programs": [
     {
@@ -156,23 +144,24 @@ Response (ProgramMilestoneSummaryDto)
     }
   ]
 }
+```
 
 Example
 - curl "{BASE}/analytics/program/Initiative-summary?programIds=37,40"
 
 ---
 
-5) GET /at-risk
-Purpose
-Programs at Risk card with counts by risk status, range, and change vs last quarter.
+### GET /at-risk
+Programs at Risk: counts, range, change vs last quarter.
 
-Query parameters
+Parameters
 - programIds: List<Long> (optional)
 
 Response (ProgramsAtRiskDto)
+```json
 {
   "riskScoreRange": "8 - 60%",
-  "changeFromLastQuarter": 1,           // displayed as "+1% vs Last Quarter"
+  "changeFromLastQuarter": 1,
   "totalPrograms": 14,
   "onTrackCount": 6,
   "atRiskCount": 5,
@@ -183,20 +172,21 @@ Response (ProgramsAtRiskDto)
   "avgRiskScore": 28.50,
   "combinedRiskPercentage": 57.14
 }
+```
 
 Example
 - curl "{BASE}/analytics/program/at-risk"
 
 ---
 
-6) GET /performance-vs-target
-Purpose
-Compares actual vs target progress per program, with overall averages and count by status.
+### GET /performance-vs-target
+Per-program actual vs target with overall stats.
 
-Query parameters
+Parameters
 - programIds: List<Long> (optional)
 
 Response (ProgramPerformanceVsTargetDto)
+```json
 {
   "programs": [
     {
@@ -204,10 +194,10 @@ Response (ProgramPerformanceVsTargetDto)
       "programName": { "ar": "...", "en": "..." },
       "goalId": 12,
       "goalName": { "ar": "...", "en": "..." },
-      "actualPercent": 62.50,            // 0..100, rounded
-      "targetPercent": 70.00,            // 0..100, rounded
-      "variance": -7.50,                 // actual - target
-      "status": "on_target"             // above_target | on_target | below_target
+      "actualPercent": 62.50,
+      "targetPercent": 70.00,
+      "variance": -7.50,
+      "status": "on_target"
     }
   ],
   "overallStats": {
@@ -220,40 +210,42 @@ Response (ProgramPerformanceVsTargetDto)
     "belowTargetCount": 4
   }
 }
+```
 
 Example
 - curl "{BASE}/analytics/program/performance-vs-target?programIds=37,40"
 
 ---
 
-7) GET /budget-vs-progress
-Purpose
-Monthly time-series suitable for a dual-axis chart: progress line (left axis, percent 0–100%) vs. monthly budget consumption bars (right axis, currency). Always includes all calendar months in range.
+### GET /budget-vs-progress
+Monthly time-series for dual-axis chart: progress line (0–100%) vs monthly budget consumption bars.
 
-Query parameters
+Parameters
 - programIds: List<Long> (optional)
-- startDate: LocalDate (optional, ISO) — Inclusive; defaults to earliest data month
-- endDate: LocalDate (optional, ISO) — Inclusive; defaults to latest data month
+- startDate: LocalDate (optional; defaults from data)
+- endDate: LocalDate (optional; defaults from data)
 
 Response (ProgramBudgetVsProgressSeriesDto)
+```json
 {
   "start": "2023-01-01",
   "end": "2025-10-21",
   "points": [
     {
-      "monthLabel": "Jan",              // English short month name
-      "month": "2025-01-31",           // period end (month end)
-      "progressPercentage": 0.59,        // 0..1, 2 decimals; null if no progress yet
-      "budgetConsumption": 10000.00      // currency aggregated from PROGRAM + INITIATIVE payments
+      "monthLabel": "Jan",
+      "month": "2025-01-31",
+      "progressPercentage": 0.59,
+      "budgetConsumption": 10000.00
     }
   ]
 }
+```
 
-Chart guidance
-- X-axis: monthLabel (string). Ensure months are rendered in chronological order using "month" as the sort key.
-- Left Y-axis (line): progressPercentage × 100 (0–100%). Nulls create gaps.
-- Right Y-axis (bars): budgetConsumption (currency). Show zeros when no payments in a month.
-- Gaps: All calendar months in [start, end] are included even without data.
+Chart Guidance
+- X-axis: monthLabel (use month for sorting)
+- Left Y-axis: progressPercentage × 100 (0–100%), nulls create gaps
+- Right Y-axis: budgetConsumption (currency), zeros when no payments
+- Includes all months in range
 
 Examples
 - curl "{BASE}/analytics/program/budget-vs-progress?programIds=10,20"
@@ -261,17 +253,17 @@ Examples
 
 ---
 
-8) GET /progress-series
-Purpose
-Per-program progress time-series similar to the goal progress-series. Returns latest progress value per period end (month/quarter) for each program.
+### GET /progress-series
+Per-program progress series (month/quarter) similar to goal progress-series.
 
-Query parameters
+Parameters
 - programIds: List<Long> (optional)
-- granularity: String (optional, default: month) — Allowed: month | quarter
-- startDate: LocalDate (optional, ISO) — Inclusive; defaults from data bounds
-- endDate: LocalDate (optional, ISO) — Inclusive; defaults from data bounds
+- granularity: month | quarter (default: month)
+- startDate: LocalDate (optional; defaults from data)
+- endDate: LocalDate (optional; defaults from data)
 
 Response (ProgramProgressSeriesDto)
+```json
 {
   "granularity": "month",
   "start": "2024-01-01",
@@ -287,21 +279,20 @@ Response (ProgramProgressSeriesDto)
     }
   ]
 }
+```
 
 Notes
-- percent is normalized to 0..1 and may be null when no progress exists yet by period end.
-- date equals the period end (month-end or quarter-end) for each generated period between start and end.
+- percent is normalized to 0..1 and may be null if no progress exists by period end
+- date equals the period end (month-end or quarter-end)
 
 Examples
 - curl "{BASE}/analytics/program/progress-series?programIds=10,20"
 - curl "{BASE}/analytics/program/progress-series?granularity=quarter&startDate=2024-01-01&endDate=2025-12-31"
 
----
+## Error Handling
+- Missing/empty filters aggregate across all programs where applicable
+- Numeric fields consistently rounded; percentages normalized
+- Dates are ISO date-only; parse accordingly on the client
 
-Error handling & nulls
-- Missing/empty filters return aggregated results where applicable.
-- Numeric fields may be 0 when undefined; percentage outputs are consistently rounded.
-- Dates are ISO format; ensure your client parses to local time or treats them as date-only.
-
-Change log
-- 2025-10-22: Initial consolidated documentation added for the 8 Program Analytics endpoints.
+## Change Log
+- 2025-10-22: Beautified Markdown reference created (this file).
