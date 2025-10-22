@@ -1,3 +1,16 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Program Analytics API
+Beautiful Reference & Charting Guide
+Last updated: 2025-10-22
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Table of Contents
+1) Overview
+2) Endpoints Overview
+3) Usage Notes
+4) Error Handling
+5) Change Log
+
 # Program Analytics API — Comprehensive Documentation
 
 NOTE: This documentation has been migrated to PROGRAM_ANALYTICS_API.docx for Google Docs compatibility. If you are collaborating via Google Docs, use the .docx version. The Markdown version is retained here for reference.
