@@ -24,42 +24,62 @@ Table of Contents
 
 ## Endpoints
 
-### GET /list
-Returns programs for filter dropdowns.
+# Get all programs
+GET /analytics/program/list
 
-Parameters
-- ids: List<Long> (optional)
+# Filter by strategy
+GET /analytics/program/list?strategyIds=1,2,3
 
-Response (ProgramListFilterDto)
+# Filter by perspective and goal
+GET /analytics/program/list?perspectiveIds=5&goalIds=10,11
+
+# Filter by multiple criteria (cascading)
+GET /analytics/program/list?strategyIds=1&perspectiveIds=5&goalIds=10&ids=20,21
+```
+
+#### Response Structure
+
 ```json
 {
-    "data": [
-        {
-            "id": 32,
-            "name": {
-                "en": "The national program to improve government services and simplify procedures",
-                "ar": "البرنامج الوطني لتحسين الخدمات الحكومية وتبسيط الإجراءات"
-            },
-            "goalId": 29,
-            "goalName": {
-                "en": "Enhancing the efficiency of providing government services and improving the experience of beneficiaries",
-                "ar": "تعزيز كفاءة تقديم الخدمات الحكومية وتحسين تجربة المستفيدين"
-            },
-            "strategyId": 5,
-            "strategyName": {
-                "en": "Strategic plan for institutional excellence and quality of services",
-                "ar": "الخطة الاستراتيجية للتميز المؤسسي وجودة الخدمات"
-            }
-        }
-    ],
-    "totalCount": 1
+  "data": [
+    {
+      "id": 1,
+      "name": {
+        "ar": "البرنامج الأول",
+        "en": "First Program"
+      },
+      "goalId": 10,
+      "goalName": {
+        "ar": "الهدف الأول",
+        "en": "First Goal"
+      },
+      "perspectiveId": 5,
+      "perspectiveName": {
+        "ar": "المنظور الأول",
+        "en": "First Perspective"
+      },
+      "strategyId": 1,
+      "strategyName": {
+        "ar": "الاستراتيجية الأولى",
+        "en": "First Strategy"
+      }
+    }
+  ],
+  "totalCount": 1
 }
 ```
 
-Examples
-- curl "{BASE}/analytics/program/list"
-- curl "{BASE}/analytics/program/list?goalIds=12,15"
-- curl "{BASE}/analytics/program/list?ids=37,40"
+
+#### Hierarchical Structure
+
+```
+Strategy (استراتيجية)
+└── Perspective (منظور)
+    └── Goal (هدف)
+        └── Program (برنامج)
+            └── Initiative (مبادرة)
+```
+
 
 ---
 
@@ -666,6 +686,8 @@ Response (ProgramPerformanceVarianceDto)
 }
 ```
 
+
+
 Variance Status Values
 - `AHEAD`: Variance > +10% (significantly ahead of target)
 - `ON_TRACK`: Variance within ±5%
@@ -695,10 +717,88 @@ Examples
 - curl "{BASE}/analytics/program/progress-series?programIds=10,20"
 - curl "{BASE}/analytics/program/progress-series?granularity=quarter&startDate=2024-01-01&endDate=2025-12-31"
 
-## Error Handling
-- Missing/empty filters aggregate across all programs where applicable
-- Numeric fields consistently rounded; percentages normalized
-- Dates are ISO date-only; parse accordingly on the client
 
-## Change Log
-- 2025-10-22: Beautified Markdown reference created (this file).
+**Endpoint:** `GET /analytics/program/milestone-timeline`
+
+**Description:** Retrieves detailed milestone/checkpoint timeline information for programs within a specified date range. Shows planned checkpoints vs actual progress.
+
+#### Request Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `programIds` | List<Long> | No | Filter by specific program IDs |
+| `goalIds` | List<Long> | No | Filter by goal IDs (programs under these goals) |
+| `startDate` | LocalDate | No | Start date for milestone range (ISO format: yyyy-MM-dd) |
+| `endDate` | LocalDate | No | End date for milestone range (ISO format: yyyy-MM-dd) |
+
+#### Example Requests
+
+```bash
+# Get all milestones
+GET /analytics/program/milestone-timeline
+
+# Filter by date range
+GET /analytics/program/milestone-timeline?startDate=2024-01-01&endDate=2024-12-31
+
+# Filter by programs and date range
+GET /analytics/program/milestone-timeline?programIds=1,2,3&startDate=2024-06-01&endDate=2024-12-31
+
+# Filter by goals
+GET /analytics/program/milestone-timeline?goalIds=10,11,12
+```
+
+#### Response Structure
+
+```json
+{
+  "programs": [
+    {
+      "programId": 1,
+      "programName": {
+        "ar": "البرنامج الأول",
+        "en": "First Program"
+      },
+      "goalId": 10,
+      "goalName": {
+        "ar": "الهدف الأول",
+        "en": "First Goal"
+      },
+      "milestones": [
+        {
+          "checkpointId": 100,
+          "checkpointDate": "2024-06-30",
+          "plannedPercent": 50.0,
+          "actualPercent": 45.0,
+          "variance": -5.0,
+          "status": "delayed",
+          "daysDelay": 5
+        },
+        {
+          "checkpointId": 101,
+          "checkpointDate": "2024-12-31",
+          "plannedPercent": 100.0,
+          "actualPercent": 100.0,
+          "variance": 0.0,
+          "status": "on_time",
+          "daysDelay": 0
+        }
+      ],
+      "summary": {
+        "totalMilestones": 2,
+        "onTimeMilestones": 1,
+        "delayedMilestones": 1,
+        "avgVariance": -2.5,
+        "completionRate": 0.5
+      }
+    }
+  ],
+  "overallSummary": {
+    "totalPrograms": 1,
+    "totalMilestones": 2,
+    "totalOnTime": 1,
+    "totalDelayed": 1,
+    "overallCompletionRate": 0.5,
+    "avgDelay": 2.5
+  }
+}
+```
