@@ -20,6 +20,8 @@
 **Request Example:**
 ```http
 GET /analytics/portfolio/dashboard?planYear=2025&quarter=2
+GET /analytics/portfolio/dashboard?planYear=2025&initiativeIds=1,2,3
+GET /analytics/portfolio/dashboard?planYear=2025&projectIds=16,23,49&quarter=1
 ```
 
 **Response:**
@@ -54,11 +56,16 @@ GET /analytics/portfolio/dashboard?planYear=2025&quarter=2
 
 **Endpoint:** `GET /analytics/portfolio/overall-health`
 
-**Parameters:** Same as dashboard
+**Parameters:**
+- `planYear` (optional): Integer - Annual plan year (default: current year)
+- `initiativeIds` (optional): String - Comma-separated initiative IDs
+- `projectIds` (optional): String - Comma-separated project IDs
+- `quarter` (optional): Integer - Quarter 1-4
 
 **Request Example:**
 ```http
 GET /analytics/portfolio/overall-health?planYear=2025
+GET /analytics/portfolio/overall-health?planYear=2025&initiativeIds=5,7&quarter=3
 ```
 
 **Response:**
@@ -86,11 +93,16 @@ GET /analytics/portfolio/overall-health?planYear=2025
 
 **Endpoint:** `GET /analytics/portfolio/indicators-at-risk`
 
-**Parameters:** Same as dashboard
+**Parameters:**
+- `planYear` (optional): Integer - Annual plan year (default: current year)
+- `initiativeIds` (optional): String - Comma-separated initiative IDs
+- `projectIds` (optional): String - Comma-separated project IDs
+- `quarter` (optional): Integer - Quarter 1-4
 
 **Request Example:**
 ```http
 GET /analytics/portfolio/indicators-at-risk?planYear=2025
+GET /analytics/portfolio/indicators-at-risk?planYear=2025&projectIds=16,23,49
 ```
 
 **Response:**
@@ -117,11 +129,16 @@ GET /analytics/portfolio/indicators-at-risk?planYear=2025
 
 **Endpoint:** `GET /analytics/portfolio/budget-consumption`
 
-**Parameters:** Same as dashboard
+**Parameters:**
+- `planYear` (optional): Integer - Annual plan year (default: current year)
+- `initiativeIds` (optional): String - Comma-separated initiative IDs
+- `projectIds` (optional): String - Comma-separated project IDs
+- `quarter` (optional): Integer - Quarter 1-4
 
 **Request Example:**
 ```http
 GET /analytics/portfolio/budget-consumption?planYear=2025
+GET /analytics/portfolio/budget-consumption?planYear=2025&initiativeIds=1,2&quarter=2
 ```
 
 **Response:**
@@ -146,7 +163,7 @@ GET /analytics/portfolio/budget-consumption?planYear=2025
 **Endpoint:** `GET /analytics/portfolio/upcoming-deadlines`
 
 **Parameters:**
-- `planYear` (optional): Integer - Annual plan year
+- `planYear` (optional): Integer - Annual plan year (default: current year)
 - `initiativeIds` (optional): String - Comma-separated initiative IDs
 - `projectIds` (optional): String - Comma-separated project IDs
 - `quarter` (optional): Integer - Quarter 1-4
@@ -155,6 +172,7 @@ GET /analytics/portfolio/budget-consumption?planYear=2025
 **Request Example:**
 ```http
 GET /analytics/portfolio/upcoming-deadlines?planYear=2025&limit=5
+GET /analytics/portfolio/upcoming-deadlines?planYear=2025&projectIds=16,23&limit=20
 ```
 
 **Response:**
@@ -195,7 +213,7 @@ GET /analytics/portfolio/upcoming-deadlines?planYear=2025&limit=5
 **Endpoint:** `GET /analytics/portfolio/project-achievement-trend`
 
 **Parameters:**
-- `planYear` (optional): Integer - Annual plan year
+- `planYear` (optional): Integer - Annual plan year (default: current year)
 - `initiativeIds` (optional): String - Comma-separated initiative IDs
 - `projectIds` (optional): String - Comma-separated project IDs
 - `startMonth` (optional): Integer 1-12 (default: 1)
@@ -204,6 +222,7 @@ GET /analytics/portfolio/upcoming-deadlines?planYear=2025&limit=5
 **Request Example:**
 ```http
 GET /analytics/portfolio/project-achievement-trend?planYear=2025&startMonth=1&endMonth=6
+GET /analytics/portfolio/project-achievement-trend?planYear=2025&projectIds=16,23,49&startMonth=3&endMonth=9
 ```
 
 **Response:**
@@ -256,11 +275,17 @@ GET /analytics/portfolio/project-achievement-trend?planYear=2025&startMonth=1&en
 
 **Endpoint:** `GET /analytics/portfolio/budget-consumption-trend`
 
-**Parameters:** Same as project achievement trend
+**Parameters:**
+- `planYear` (optional): Integer - Annual plan year (default: current year)
+- `initiativeIds` (optional): String - Comma-separated initiative IDs
+- `projectIds` (optional): String - Comma-separated project IDs
+- `startMonth` (optional): Integer 1-12 (default: 1)
+- `endMonth` (optional): Integer 1-12 (default: current month)
 
 **Request Example:**
 ```http
 GET /analytics/portfolio/budget-consumption-trend?planYear=2025&startMonth=1&endMonth=6
+GET /analytics/portfolio/budget-consumption-trend?planYear=2025&initiativeIds=5,7&startMonth=1&endMonth=10
 ```
 
 **Response:**
@@ -315,10 +340,51 @@ GET /analytics/portfolio/budget-consumption-trend?planYear=2025&startMonth=1&end
 ## Common Parameters
 
 All endpoints support these filters:
-- `planYear`: Target annual plan year
-- `initiativeIds`: Filter by initiatives (CSV)
-- `projectIds`: Filter by projects (CSV)
-- `quarter`: Quarterly breakdown (1-4)
+
+| Parameter | Type | Required | Default | Description | Example |
+|-----------|------|----------|---------|-------------|---------|
+| `planYear` | Integer | No | Current year | Annual plan year to analyze | `2025` |
+| `initiativeIds` | String (CSV) | No | All initiatives | Filter by specific initiatives | `"1,2,3"` |
+| `projectIds` | String (CSV) | No | All projects | Filter by specific projects | `"16,23,49"` |
+| `quarter` | Integer | No | Cumulative | Quarter 1-4 for time-specific view | `2` |
+
+**Trend-specific parameters:**
+
+| Parameter | Type | Required | Default | Description | Example |
+|-----------|------|----------|---------|-------------|---------|
+| `startMonth` | Integer | No | 1 | Start month for trend analysis (1-12) | `3` |
+| `endMonth` | Integer | No | Current month | End month for trend analysis (1-12) | `9` |
+| `limit` | Integer | No | 10 | Max results for deadlines endpoint | `20` |
+
+---
+
+## Parameter Examples
+
+### Filter by Initiative
+```http
+GET /analytics/portfolio/overall-health?planYear=2025&initiativeIds=1,2,3
+```
+
+### Filter by Projects
+```http
+GET /analytics/portfolio/budget-consumption?planYear=2025&projectIds=16,23,49
+```
+
+### Quarterly Analysis
+```http
+GET /analytics/portfolio/indicators-at-risk?planYear=2025&quarter=2
+```
+
+### Combine Filters
+```http
+GET /analytics/portfolio/dashboard?planYear=2025&initiativeIds=5,7&quarter=3
+GET /analytics/portfolio/project-achievement-trend?planYear=2025&projectIds=16,23&startMonth=1&endMonth=6
+```
+
+### All Projects (No Filter)
+```http
+GET /analytics/portfolio/overall-health?planYear=2025
+```
 
 ---
 
@@ -344,3 +410,12 @@ All endpoints support these filters:
 - `WARNING` - Due 8-30 days (ORANGE)
 - `HEALTHY` - Due > 30 days (GREEN)
 
+**Variance Status:**
+- `FAVORABLE` - Under budget (variance < -5%)
+- `ON_TARGET` - Within ±5% of forecast
+- `UNFAVORABLE` - Over budget (variance > 5%)
+
+**Projection Status:**
+- `UNDER_BUDGET` - Overall spending below forecast
+- `ON_BUDGET` - Spending aligned with forecast
+- `OVER_BUDGET` - Overall spending exceeds forecast
