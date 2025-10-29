@@ -495,58 +495,79 @@ GET /analytics/portfolio/progress-trend?planYears=2024,2025&timeUnit=MONTHLY
 GET /analytics/portfolio/progress-trend?planYears=2025&timeUnit=QUARTERLY&startPeriod=1&endPeriod=3
 ```
 
----
+### Endpoint
+```
+GET /analytics/portfolio/project-achievement-trend
+```
 
-### 12. Project Achievement Trend
-**GET** `/project-achievement-trend`
+### Description
+Displays achievement progress trends over time for projects or initiatives. Shows monthly progress percentages with trend lines to visualize performance trajectory.
 
-Project achievement trends over time.
+### Query Parameters
 
-#### Query Parameters
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `planYear` | Integer | No | Annual plan year |
-| `initiativeIds` | String | No | CSV list of initiative IDs |
-| `projectIds` | String | No | CSV list of project IDs |
-| `startMonth` | Integer | No | Start month (1-12) |
-| `endMonth` | Integer | No | End month (1-12) |
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `planYear` | Integer | No | Current year | Filter by annual plan year |
+| `initiativeIds` | String (CSV) | No | null | Optional comma-separated list of initiative IDs to filter |
+| `projectIds` | String (CSV) | No | null | Optional comma-separated list of project IDs to filter |
+| `startMonth` | Integer | No | 1 | Start month (1-12) for the trend period |
+| `endMonth` | Integer | No | Current month | End month (1-12) for the trend period |
+| `entityType` | String | No | `PROJECTS` | Toggle between entity types: `PROJECTS` or `INITIATIVES` |
 
-#### Response Example
+### Example Requests
+
+**View project achievement trends for 2025:**
+```
+GET /analytics/portfolio/project-achievement-trend?planYear=2025&entityType=PROJECTS
+```
+
+**View initiatives achievement trends from January to June:**
+```
+GET /analytics/portfolio/project-achievement-trend?planYear=2025&startMonth=1&endMonth=6&entityType=INITIATIVES
+```
+
+**View specific projects:**
+```
+GET /analytics/portfolio/project-achievement-trend?planYear=2025&projectIds=123,456,789&entityType=PROJECTS
+```
+
+### Response Structure
 ```json
 {
   "planYear": 2025,
   "startMonth": 1,
   "endMonth": 6,
-  "trend": [
+  "entityType": "PROJECTS",
+  "series": [
     {
-      "month": 1,
-      "label": "Jan",
-      "averageAchievement": 15.5,
-      "projectCount": 42
-    },
-    {
-      "month": 2,
-      "label": "Feb",
-      "averageAchievement": 28.3,
-      "projectCount": 42
-    },
-    {
-      "month": 3,
-      "label": "Mar",
-      "averageAchievement": 42.8,
-      "projectCount": 45
+      "entityId": 123,
+      "entityName": "Digital Transformation Project",
+      "dataPoints": [
+        {
+          "month": 1,
+          "monthName": "January",
+          "achievementPercent": 15.5
+        },
+        {
+          "month": 2,
+          "monthName": "February",
+          "achievementPercent": 28.3
+        }
+      ]
     }
-  ]
+  ],
+  "totalEntities": 4
 }
 ```
 
-#### Example
-```
-GET /analytics/portfolio/project-achievement-trend?planYear=2025&startMonth=1&endMonth=6
-```
+### Use Case
+- Track project/initiative progress over time
+- Identify trends and patterns in achievement
+- Compare multiple projects side-by-side
+- Monitor if projects are accelerating or decelerating
+- Generate monthly progress reports
 
 ---
-
 ### 13. Budget Consumption Trend
 **GET** `/budget-consumption-trend`
 
@@ -597,254 +618,90 @@ GET /analytics/portfolio/budget-consumption-trend?planYear=2025&startMonth=1&end
 
 ---
 
-## KPI Performance Endpoints
+## KPI Performance endpoint
 
-### 14. KPI Performance Dashboard
-**GET** `/kpi-dashboard`
+### Endpoint
+```
+GET /analytics/portfolio/kpi-dashboard
+```
 
-Q3 snapshot of KPI performance with baseline, targets, actuals, and status.
+### Description
+Comprehensive KPI/Indicator tracking dashboard showing quarterly performance snapshot with baseline values, annual targets, quarterly targets, actual values, variance percentages, and status indicators.
 
-#### Query Parameters
-| Parameter | Type | Required | Description | Default |
-|-----------|------|----------|-------------|---------|
-| `planYear` | Integer | No | Annual plan year | Current year |
-| `quarter` | Integer | No | Quarter number (1-4) | Current quarter |
-| `initiativeIds` | String | No | CSV list of initiative IDs | All |
-| `sortBy` | String | No | "TOP_PERFORMING" or "LOWEST_PERFORMING" | TOP_PERFORMING |
+### Query Parameters
 
-#### Response Example
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `planYear` | Integer | No | Current year | Filter by annual plan year |
+| `quarter` | Integer | No | Current quarter | Quarter number (1-4) for performance snapshot |
+| `initiativeIds` | String (CSV) | No | null | Optional comma-separated list of initiative IDs to filter |
+| `sortBy` | String | No | `TOP_PERFORMING` | Sort order: `TOP_PERFORMING` or `LOWEST_PERFORMING` |
+| `page` | Integer | No | 1 | Page number for pagination |
+| `size` | Integer | No | 10 | Number of KPIs per page |
+
+### Example Requests
+
+**View Q3 2025 KPI dashboard with top performers:**
+```
+GET /analytics/portfolio/kpi-dashboard?planYear=2025&quarter=3&sortBy=TOP_PERFORMING
+```
+
+**View lowest performing KPIs for specific initiatives:**
+```
+GET /analytics/portfolio/kpi-dashboard?planYear=2025&quarter=3&initiativeIds=45,67,89&sortBy=LOWEST_PERFORMING
+```
+
+**Paginated results (page 2, 20 items per page):**
+```
+GET /analytics/portfolio/kpi-dashboard?planYear=2025&quarter=3&page=2&size=20
+```
+
+### Response Structure
 ```json
 {
+  "planYear": 2025,
+  "quarter": 3,
   "summary": {
     "totalKpis": 30,
-    "onTrackCount": 20,
-    "atRiskCount": 7,
+    "onTrackCount": 22,
+    "onTrackPercent": 73.3,
+    "atRiskCount": 5,
+    "atRiskPercent": 16.7,
     "offTrackCount": 3,
-    "onTrackPercent": 66.7,
-    "atRiskPercent": 23.3,
     "offTrackPercent": 10.0,
-    "growthPercent": 5.2
+    "growthPercent": 12.5
   },
   "kpis": [
     {
-      "indicatorId": 101,
-      "indicatorName": "Customer Satisfaction",
+      "kpiId": 101,
+      "kpiName": "Customer Satisfaction Score",
+      "initiativeName": "Service Excellence Program",
       "baseline": 75.0,
       "annualTarget": 90.0,
-      "quarterlyTarget": 82.5,
-      "quarterlyActual": 85.0,
-      "variancePercent": 3.0,
-      "status": "ON_TRACK"
+      "quarterlyTarget": 85.0,
+      "quarterlyActual": 87.5,
+      "variancePercent": 2.94,
+      "status": "ON_TRACK",
+      "unit": "%"
+    },
+    {
+      "kpiId": 102,
+      "kpiName": "Process Automation Rate",
+      "initiativeName": "Digital Transformation",
+      "baseline": 45.0,
+      "annualTarget": 80.0,
+      "quarterlyTarget": 70.0,
+      "quarterlyActual": 65.0,
+      "variancePercent": -7.14,
+      "status": "AT_RISK",
+      "unit": "%"
     }
-  ]
+  ],
+  "pagination": {
+    "currentPage": 1,
+    "totalPages": 3,
+    "pageSize": 10,
+    "totalItems": 30
+  }
 }
 ```
-
-#### Status Determination
-- **ON_TRACK**: ≥ 95% achievement (actual/target)
-- **AT_RISK**: 80-95% achievement
-- **OFF_TRACK**: < 80% achievement
-
-#### Example
-```
-GET /analytics/portfolio/kpi-dashboard?planYear=2025&quarter=3
-GET /analytics/portfolio/kpi-dashboard?planYear=2025&quarter=3&sortBy=LOWEST_PERFORMING
-GET /analytics/portfolio/kpi-dashboard?quarter=3&initiativeIds=1,5,8
-
----
-
-## Common Response Codes
-
-| Code | Description |
-|------|-------------|
-| 200 | Success |
-| 400 | Bad Request - Invalid parameters |
-| 401 | Unauthorized - Missing or invalid authentication |
-| 403 | Forbidden - Insufficient permissions |
-| 404 | Not Found - Resource not found |
-| 500 | Internal Server Error |
-
----
-
-## Authentication
-
-All endpoints require authentication via JWT token in the Authorization header:
-
-```
-```
-
----
-
-## Common Response Codes
-
-| Code | Description |
-|------|-------------|
-| 200 | Success |
-| 400 | Bad Request - Invalid parameters |
-| 401 | Unauthorized - Missing or invalid authentication |
-| 403 | Forbidden - Insufficient permissions |
-| 500 | Internal Server Error |
-
----
-
-## Authentication
-
-All endpoints require authentication via JWT token in the Authorization header:
-
-```
-Authorization: Bearer <your-jwt-token>
-```
-
-The tenant schema is automatically determined from the JWT token's `user_schema` claim.
-
----
-
-## Common Query Parameters
-
-Most endpoints support these common filters:
-
-| Parameter | Type | Format | Description |
-|-----------|------|--------|-------------|
-| `planYear` | Integer | 2025 | Filter by annual plan year |
-| `quarter` | Integer | 1-4 | Filter by quarter |
-| `initiativeIds` | String | "1,2,3" | CSV list of initiative IDs |
-| `projectIds` | String | "10,20,30" | CSV list of project IDs |
-
----
-
-## Quick Reference
-
-| Endpoint | Primary Use | Visualization |
-|----------|-------------|---------------|
-| `/dashboard` | Main dashboard overview | Mixed |
-| `/overall-health` | Portfolio health metrics | Cards/Metrics |
-| `/indicators-at-risk` | Risk management | List/Table |
-| `/budget-consumption` | Budget monitoring | Cards/Metrics |
-| `/upcoming-deadlines` | Timeline management | List/Timeline |
-| `/progress-overview` | Quarterly snapshot | Cards with comparison |
-| `/progress-trend` | Multi-year comparison | Line chart |
-| `/project-achievement-trend` | Project progress over time | Line chart |
-| `/budget-consumption-trend` | Budget tracking over time | Line/Area chart |
-| `/progress-distribution` | Status breakdown | Donut chart |
-| `/budget-by-project` | Budget allocation & usage | Stacked bar chart |
-| `/budget-utilization-vs-achievement` | Efficiency analysis | Bubble chart |
-| `/indicators-by-initiatives` | KPI distribution | Stacked bar chart |
-| `/kpi-dashboard` | KPI performance tracking | Table/Cards |
-
----
-
-## Notes for Front-End Developers
-
-### Multi-Tenancy
-All queries automatically use the correct tenant schema based on the JWT token. No need to pass tenant information explicitly.
-
-### Data Filtering
-- Use CSV format for multiple IDs: `initiativeIds=1,2,3` or `projectIds=10,20,30`
-- Filters are optional and can be combined
-- Empty filters return all data for the specified year/quarter
-
-### Progress Calculation
-- Progress values are percentages (0-100)
-- For quarterly overview, progress is time-based and reflects what should have been achieved by the end of that quarter
-- Null progress values are treated as 0
-
-### Date Handling
-- All dates are in ISO-8601 format
-- Quarter calculation: Q1 (Jan-Mar), Q2 (Apr-Jun), Q3 (Jul-Sep), Q4 (Oct-Dec)
-- Month numbers: 1-12
-- Quarter numbers: 1-4
-
-### Default Values
-- `planYear`: Defaults to current year if not provided
-- `quarter`: Defaults to current quarter based on system date
-- `timeUnit`: Defaults to "MONTHLY"
-- `sortBy`: Defaults to "TOP_PERFORMING"
-- Boolean flags (includeProjects, includeInitiatives): Default to `true`
-
-### Performance Considerations
-- Results are computed in real-time from the database
-- Large date ranges may take longer to process
-- Consider implementing client-side caching where appropriate
-- Use specific filters to reduce data volume
-
-### Error Handling
-- Always check the HTTP status code
-- Error responses include a message field with details
-- Handle 404s gracefully (e.g., when no data exists for a given year)
-- Empty result sets return valid JSON with empty arrays/zero counts
-
----
-
-## Change Log
-
-### Version 1.0
-- Initial API documentation
-- 14 endpoints covering dashboard, visualizations, trends, and KPI performance
-- Support for multi-tenant architecture
-- Flexible filtering by year, quarter, initiatives, and projects
-```
-
-The tenant schema is automatically determined from the JWT token's `user_schema` claim.
-
----
-
-## Examples
-
-### Example 1: Get Progress Distribution
-```bash
-GET /analytics/portfolio/progress-distribution?planYear=2025
-```
-
-### Example 2: Get Monthly Progress Trend
-```bash
-GET /analytics/portfolio/progress-trend?planYear=2025&period=MONTHLY
-```
-
-### Example 3: Get Quarterly Progress Trend for Specific Initiative
-```bash
-GET /analytics/portfolio/progress-trend?planYear=2025&period=QUARTERLY&initiativeId=123
-```
-
-### Example 4: Get Budget Allocation
-```bash
-GET /analytics/portfolio/budget-allocation-by-project?planYear=2025
-```
-
-### Example 5: Get Progress Overview for Q2 2025
-```bash
-GET /analytics/portfolio/progress-overview?planYear=2025&quarter=2
-```
-
-### Example 6: Get Progress Overview for Current Quarter
-```bash
-GET /analytics/portfolio/progress-overview
-```
-
----
-
-## Notes for Front-End Developers
-
-1. **Multi-Tenancy**: All queries automatically use the correct tenant schema based on the JWT token. No need to pass tenant information.
-
-2. **Progress Calculation**: 
-   - Progress values are percentages (0-100)
-   - For quarterly overview, progress is time-based and reflects what should have been achieved by the end of that quarter
-   - Null progress values are treated as 0
-
-3. **Filtering**: 
-   - You can filter by `initiativeId` or `projectId` on most endpoints
-   - Filters are optional and can be combined
-
-4. **Date Handling**: 
-   - All dates are in ISO-8601 format
-   - Quarter calculation: Q1 (Jan-Mar), Q2 (Apr-Jun), Q3 (Jul-Sep), Q4 (Oct-Dec)
-
-5. **Performance**: 
-   - Results are computed in real-time from the database
-   - Large date ranges may take longer to process
-   - Consider implementing client-side caching where appropriate
-
-6. **Error Handling**: 
-   - Always check the HTTP status code
-   - Error responses include a message field with details
-   - Handle 404s gracefully (e.g., when no data exists for a given year)
