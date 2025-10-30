@@ -24,6 +24,205 @@ Table of Contents
 
 ## Endpoints
 
+## Endpoint 1: Get Strategies
+
+### Request
+```
+GET /analytics/program/strategies
+```
+
+#### Query Parameters
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| strategyIds | List<Long> | No | Filter by specific strategy IDs |
+
+#### Example Request
+```bash
+GET /analytics/program/strategies
+GET /analytics/program/strategies?strategyIds=1,2,3
+```
+
+### Response
+Returns all strategies that have at least one associated program.
+
+#### Response Fields (per option)
+- `id`: Strategy ID
+- `name`: Strategy name (ar/en)
+- No parent fields (strategies are top-level)
+
+#### Example Response
+```json
+{
+  "options": [
+    {
+      "id": 1,
+      "name": {
+        "ar": "الاستراتيجية الأولى",
+        "en": "First Strategy"
+      }
+    },
+    {
+      "id": 2,
+      "name": {
+        "ar": "الاستراتيجية الثانية",
+        "en": "Second Strategy"
+      }
+    }
+  ]
+}
+```
+
+### Business Logic
+- Returns only strategies that have programs (directly or through perspectives/goals)
+- Filters by provided strategyIds if specified
+- Orders results by strategy ID
+
+---
+
+## Endpoint 2: Get Perspectives
+
+### Request
+```
+GET /analytics/program/perspectives
+```
+
+#### Query Parameters
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| strategyIds | List<Long> | No | Filter perspectives by parent strategy IDs |
+| perspectiveIds | List<Long> | No | Filter by specific perspective IDs |
+
+#### Example Request
+```bash
+GET /analytics/program/perspectives
+GET /analytics/program/perspectives?strategyIds=1,2
+GET /analytics/program/perspectives?strategyIds=1&perspectiveIds=5,6
+```
+
+### Response
+Returns perspectives filtered by the provided criteria, showing their parent strategy information.
+
+#### Response Fields (per option)
+- `id`: Perspective ID
+- `name`: Perspective name (ar/en)
+- `strategyId`: Parent strategy ID
+- `strategyName`: Parent strategy name (ar/en)
+
+#### Example Response
+```json
+{
+  "options": [
+    {
+      "id": 5,
+      "name": {
+        "ar": "المنظور الأول",
+        "en": "First Perspective"
+      },
+      "strategyId": 1,
+      "strategyName": {
+        "ar": "الاستراتيجية الأولى",
+        "en": "First Strategy"
+      }
+    },
+    {
+      "id": 6,
+      "name": {
+        "ar": "المنظور الثاني",
+        "en": "Second Perspective"
+      },
+      "strategyId": 1,
+      "strategyName": {
+        "ar": "الاستراتيجية الأولى",
+        "en": "First Strategy"
+      }
+    }
+  ]
+}
+```
+
+### Business Logic
+- Returns only perspectives that have programs (directly or through goals)
+- Filters by parent strategyIds if provided
+- Filters by specific perspectiveIds if provided
+- Shows immediate parent (strategy) information
+- Orders results by perspective ID
+
+---
+
+## Endpoint 3: Get Goals
+
+### Request
+```
+GET /analytics/program/goals
+```
+
+#### Query Parameters
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| strategyIds | List<Long> | No | Filter goals by grandparent strategy IDs |
+| perspectiveIds | List<Long> | No | Filter goals by parent perspective IDs |
+| goalIds | List<Long> | No | Filter by specific goal IDs |
+
+#### Example Request
+```bash
+GET /analytics/program/goals
+GET /analytics/program/goals?perspectiveIds=5,6
+GET /analytics/program/goals?strategyIds=1&perspectiveIds=5&goalIds=10,11
+```
+
+### Response
+Returns goals filtered by the provided criteria, showing only their immediate parent (perspective) information.
+
+#### Response Fields (per option)
+- `id`: Goal ID
+- `name`: Goal name (ar/en)
+- `perspectiveId`: Parent perspective ID
+- `perspectiveName`: Parent perspective name (ar/en)
+
+**Note**: Unlike the full hierarchy, goals return only immediate parent (perspective) data, not grandparent (strategy) data.
+
+#### Example Response
+```json
+{
+  "options": [
+    {
+      "id": 10,
+      "name": {
+        "ar": "الهدف الأول",
+        "en": "First Goal"
+      },
+      "perspectiveId": 5,
+      "perspectiveName": {
+        "ar": "المنظور الأول",
+        "en": "First Perspective"
+      }
+    },
+    {
+      "id": 11,
+      "name": {
+        "ar": "الهدف الثاني",
+        "en": "Second Goal"
+      },
+      "perspectiveId": 5,
+      "perspectiveName": {
+        "ar": "المنظور الأول",
+        "en": "First Perspective"
+      }
+    }
+  ]
+}
+```
+
+### Business Logic
+- Returns only goals that have associated programs
+- Filters by grandparent strategyIds if provided (through perspective join)
+- Filters by parent perspectiveIds if provided
+- Filters by specific goalIds if provided
+- Shows only immediate parent (perspective) information
+- Excludes grandparent (strategy) information to minimize response size
+- Orders results by goal ID
+
+---
 # Get all programs
 GET /analytics/program/list
 
