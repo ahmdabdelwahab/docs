@@ -127,6 +127,57 @@ Returns talent distribution across seniority levels.
         },
 ```
 
+4- Get Talent by experience
+
+**Endpoint:** `GET /analytics/talent/by-experience`
+
+```json
+{
+    "experienceDistribution": [
+        {
+            "yearsOfExperience": 1,
+            "numberOfEmployees": 4
+        },
+        {
+            "yearsOfExperience": 2,
+            "numberOfEmployees": 1
+        },
+        {
+            "yearsOfExperience": 9,
+            "numberOfEmployees": 1
+        },
+        {
+            "yearsOfExperience": 10,
+            "numberOfEmployees": 1
+        },
+        {
+            "yearsOfExperience": 15,
+            "numberOfEmployees": 1
+        },
+        {
+            "yearsOfExperience": 18,
+            "numberOfEmployees": 1
+        },
+        {
+            "yearsOfExperience": 20,
+            "numberOfEmployees": 1
+        },
+        {
+            "yearsOfExperience": 23,
+            "numberOfEmployees": 1
+        },
+        {
+            "yearsOfExperience": 30,
+            "numberOfEmployees": 1
+        }
+    ]
+}
+```
+
+
+---
+
+
 
 ### 4. Get Talent By Nationality
 Returns talent distribution by nationality.
