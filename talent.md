@@ -301,3 +301,285 @@ Returns metrics about talent involvement in projects and activities.
         },
 ...
 ----
+
+
+
+# Talent Skill & Certification Analytics API Documentation
+
+## Overview
+
+This document covers two talent analytics endpoints focused on skill category balance and certification completion tracking.
+
+---
+
+## 1. Skill Category Balance
+
+Returns the distribution and balance of skills across different skill categories within the organization's talent pool.
+
+### Endpoint
+
+```
+GET /analytics/talent/skill-category-balance
+```
+
+### Description
+
+Analyzes the organization's skill portfolio by categorizing all talent skills into predefined categories (e.g., Technical, Management, Soft Skills, Domain Expertise) and calculating the distribution and balance across these categories. This helps identify skill gaps and areas of strength.
+
+### Request
+
+**HTTP Method:** GET
+
+**No parameters required**
+
+**Headers:**
+```
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+### Response
+
+**Status Code:** 200 OK
+
+**Response Body:**
+```json
+{
+  "totalSkills": 450,
+  "totalCategories": 5,
+  "categoryBreakdown": [
+    {
+      "categoryId": "1",
+      "categoryName": {
+        "en": "Technical Skills",
+        "ar": "المهارات التقنية",
+        "de": "Technische Fähigkeiten",
+        "fr": "Compétences techniques",
+        "sw": "Ujuzi wa Kiufundi"
+      },
+      "skillCount": 180,
+      "talentCount": 145,
+      "percentage": 40.0,
+      "avgProficiencyLevel": 3.2
+    },
+    {
+      "categoryId": "2",
+      "categoryName": {
+        "en": "Management Skills",
+        "ar": "مهارات الإدارة",
+        "de": "Managementfähigkeiten",
+        "fr": "Compétences en gestion",
+        "sw": "Ujuzi wa Usimamizi"
+      },
+      "skillCount": 95,
+      "talentCount": 78,
+      "percentage": 21.1,
+      "avgProficiencyLevel": 2.8
+    },
+    {
+      "categoryId": "3",
+      "categoryName": {
+        "en": "Soft Skills",
+        "ar": "المهارات الناعمة",
+        "de": "Soft Skills",
+        "fr": "Compétences générales",
+        "sw": "Ujuzi Laini"
+      },
+      "skillCount": 85,
+      "talentCount": 165,
+      "percentage": 18.9,
+      "avgProficiencyLevel": 3.5
+    },
+    {
+      "categoryId": "4",
+      "categoryName": {
+        "en": "Domain Expertise",
+        "ar": "الخبرة المجالية",
+        "de": "Domänenkompetenz",
+        "fr": "Expertise du domaine",
+        "sw": "Utaalamu wa Eneo"
+      },
+      "skillCount": 65,
+      "talentCount": 92,
+      "percentage": 14.4,
+      "avgProficiencyLevel": 3.8
+    },
+    {
+      "categoryId": "5",
+      "categoryName": {
+        "en": "Language Skills",
+        "ar": "المهارات اللغوية",
+        "de": "Sprachkenntnisse",
+        "fr": "Compétences linguistiques",
+        "sw": "Ujuzi wa Lugha"
+      },
+      "skillCount": 25,
+      "talentCount": 110,
+      "percentage": 5.6,
+      "avgProficiencyLevel": 2.9
+    }
+  ],
+  "balanceScore": 0.72,
+  "topCategory": {
+    "en": "Technical Skills",
+    "ar": "المهارات التقنية"
+  },
+  "underrepresentedCategory": {
+    "en": "Language Skills",
+    "ar": "المهارات اللغوية"
+  }
+}
+```
+
+
+
+## 2. Certification Completion Card
+
+Returns a summary card showing certification completion statistics and trends within the organization.
+
+### Endpoint
+
+```
+GET /analytics/talent/certification-completion
+```
+
+### Description
+
+Provides a high-level overview of certification status across the talent pool, including completion rates, in-progress certifications, expiring certifications, and trends over time. This metric is crucial for compliance tracking, professional development monitoring, and certification program effectiveness.
+
+### Request
+
+**HTTP Method:** GET
+
+**No parameters required**
+
+**Headers:**
+```
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+### Response
+
+**Status Code:** 200 OK
+
+**Response Body:**
+```json
+{
+  "totalCertifications": 450,
+  "completedCertifications": 320,
+  "inProgressCertifications": 85,
+  "expiredCertifications": 45,
+  "completionRate": 71.1,
+  "avgCompletionTime": 45.5,
+  "expiringWithin30Days": 12,
+  "expiringWithin90Days": 28,
+  "byStatus": {
+    "completed": {
+      "count": 320,
+      "percentage": 71.1
+    },
+    "inProgress": {
+      "count": 85,
+      "percentage": 18.9
+    },
+    "expired": {
+      "count": 45,
+      "percentage": 10.0
+    }
+  },
+  "byCategory": [
+    {
+      "categoryName": {
+        "en": "IT Certifications",
+        "ar": "شهادات تقنية المعلومات"
+      },
+      "completed": 145,
+      "inProgress": 32,
+      "completionRate": 81.9
+    },
+    {
+      "categoryName": {
+        "en": "Professional Certifications",
+        "ar": "الشهادات المهنية"
+      },
+      "completed": 98,
+      "inProgress": 28,
+      "completionRate": 77.8
+    },
+    {
+      "categoryName": {
+        "en": "Management Certifications",
+        "ar": "شهادات الإدارة"
+      },
+      "completed": 77,
+      "inProgress": 25,
+      "completionRate": 75.5
+    }
+  ],
+  "topCertifications": [
+    {
+      "certificationName": {
+        "en": "PMP - Project Management Professional",
+        "ar": "محترف إدارة المشاريع"
+      },
+      "completedCount": 45,
+      "inProgressCount": 12
+    },
+    {
+      "certificationName": {
+        "en": "AWS Certified Solutions Architect",
+        "ar": "مهندس حلول أمازون ويب سيرفس المعتمد"
+      },
+      "completedCount": 38,
+      "inProgressCount": 8
+    },
+    {
+      "certificationName": {
+        "en": "CISSP - Certified Information Systems Security Professional",
+        "ar": "محترف أمن نظم المعلومات المعتمد"
+      },
+      "completedCount": 28,
+      "inProgressCount": 6
+    }
+  ],
+  "monthlyTrend": [
+    {
+      "month": "2025-05",
+      "completed": 12,
+      "started": 18
+    },
+    {
+      "month": "2025-06",
+      "completed": 15,
+      "started": 22
+    },
+    {
+      "month": "2025-07",
+      "completed": 18,
+      "started": 20
+    },
+    {
+      "month": "2025-08",
+      "completed": 22,
+      "started": 25
+    },
+    {
+      "month": "2025-09",
+      "completed": 20,
+      "started": 19
+    },
+    {
+      "month": "2025-10",
+      "completed": 25,
+      "started": 28
+    }
+  ],
+  "complianceStatus": {
+    "mandatoryCertifications": 150,
+    "mandatoryCompleted": 142,
+    "complianceRate": 94.7
+  }
+}
+```
+
