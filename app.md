@@ -221,14 +221,14 @@ Returns application distribution by root portfolio types (top-level categories).
 
 Returns detailed list of applications for a specific portfolio type.
 
-**Endpoint:** `GET /analytics/applications/portfolio-distribution/applications`
+**Endpoint:** `GET /analytics/applications/portfolio-distribution/apps-drill`
 
 **Query Parameters:**
 - `portfolioTypeId` (optional): The root category ID. Pass `null` or omit for uncategorized applications.
 
 **Example Request:**
 ```
-GET /analytics/applications/portfolio-distribution/applications?portfolioTypeId=1
+GET /analytics/applications/portfolio-distribution/apps-drill?portfolioTypeId=1
 ```
 
 **Response:**
