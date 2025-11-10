@@ -30,9 +30,7 @@ GET /analytics/infrastructure/total
 **Response:**
 ```json
 {
-  "totalInfrastructure": 150,
-  "activeInfrastructure": 120,
-  "inactiveInfrastructure": 30
+    "totalInfrastructure": 21
 }
 ```
 
@@ -57,14 +55,26 @@ GET /analytics/infrastructure/top-vendors?limit=10
 **Response:**
 ```json
 [
-  {
-    "vendorName": "Vendor A",
-    "infrastructureCount": 45
-  },
-  {
-    "vendorName": "Vendor B",
-    "infrastructureCount": 38
-  }
+    {
+        "vendorName": "Vmware",
+        "infrastructureCount": 3
+    },
+    {
+        "vendorName": "Other",
+        "infrastructureCount": 3
+    },
+    {
+        "vendorName": "Barracuda",
+        "infrastructureCount": 2
+    },
+    {
+        "vendorName": "SAP",
+        "infrastructureCount": 2
+    },
+    {
+        "vendorName": "Oracle",
+        "infrastructureCount": 2
+    }
 ]
 ```
 
@@ -89,14 +99,31 @@ GET /analytics/infrastructure/top-implemented?limit=10
 **Response:**
 ```json
 [
-  {
-    "infrastructureName": "Cloud Storage",
-    "implementationCount": 67
-  },
-  {
-    "infrastructureName": "Load Balancer",
-    "implementationCount": 54
-  }
+    {
+        "rank": 1,
+        "categoryName": "Hardware",
+        "infrastructureCount": 8
+    },
+    {
+        "rank": 2,
+        "categoryName": "Cloud Services",
+        "infrastructureCount": 5
+    },
+    {
+        "rank": 3,
+        "categoryName": "Networking",
+        "infrastructureCount": 2
+    },
+    {
+        "rank": 4,
+        "categoryName": "Security",
+        "infrastructureCount": 2
+    },
+    {
+        "rank": 5,
+        "categoryName": "Software",
+        "infrastructureCount": 2
+    }
 ]
 ```
 
@@ -121,12 +148,42 @@ GET /analytics/infrastructure/top-used?language=en
 **Response:**
 ```json
 {
-  "components": [
-    {
-      "componentName": "Component A",
-      "usageCount": 123
+    "topUsedApplication": {
+        "componentId": "50",
+        "componentName": {
+            "ar": "تطبيق EPM",
+            "de": "EPM-Anwendung",
+            "en": "EPM application",
+            "fr": "Application EPM",
+            "sw": "Maombi ya EPM"
+        },
+        "usageCount": 4,
+        "usagePercentage": 19.05
+    },
+    "topUsedIntegration": {
+        "componentId": "20",
+        "componentName": {
+            "ar": "تكامل تنبيهات الشبكة والأمن",
+            "de": "Integration von Netzwerk- und Sicherheitswarnungen",
+            "en": "Network and security alerts integration",
+            "fr": "Intégration des alertes réseau et de sécurité",
+            "sw": "Ujumuishaji wa Arifa za Mtandao na Usalama"
+        },
+        "usageCount": 4,
+        "usagePercentage": 19.05
+    },
+    "topUsedLicense": {
+        "componentId": "125",
+        "componentName": {
+            "ar": "اختبار ترخيص قاعدة بيانات أوراكل",
+            "de": "Test der Oracle-Datenbanklizenz",
+            "en": "Oracle database license test",
+            "fr": "Test de licence de base de données Oracle",
+            "sw": "Mtihani wa Leseni ya Hifadhidata ya Oracle"
+        },
+        "usageCount": 4,
+        "usagePercentage": 19.05
     }
-  ]
 }
 ```
 
@@ -148,18 +205,78 @@ GET /analytics/infrastructure/distribution
 **Response:**
 ```json
 {
-  "categories": [
-    {
-      "categoryName": "Network",
-      "percentage": 35.5,
-      "count": 45
-    },
-    {
-      "categoryName": "Storage",
-      "percentage": 28.3,
-      "count": 36
-    }
-  ]
+    "totalInfrastructure": 21,
+    "categoryDistributions": [
+        {
+            "categoryId": "1",
+            "categoryName": {
+                "ar": "الأجهزة",
+                "de": "Geräte",
+                "en": "Hardware",
+                "fr": "Dispositifs",
+                "sw": "Vifaa"
+            },
+            "count": 8,
+            "percentage": 38.1
+        },
+        {
+            "categoryId": "5",
+            "categoryName": {
+                "ar": "الخدمات السحابية",
+                "de": "Cloud -Dienste",
+                "en": "Cloud Services",
+                "fr": "Services cloud",
+                "sw": "Huduma za wingu"
+            },
+            "count": 5,
+            "percentage": 23.81
+        },
+        {
+            "categoryId": "2",
+            "categoryName": {
+                "ar": "البرمجيات",
+                "de": "Software",
+                "en": "Software",
+                "fr": "Logiciel",
+                "sw": "Programu"
+            },
+            "count": 2,
+            "percentage": 9.52
+        },
+        {
+            "categoryId": "3",
+            "categoryName": {
+                "ar": "أمن المعلومات",
+                "de": "Informationssicherheit",
+                "en": "Security",
+                "fr": "Sécurité de l'information",
+                "sw": "Usalama wa Habari"
+            },
+            "count": 2,
+            "percentage": 9.52
+        },
+        {
+            "categoryId": "4",
+            "categoryName": {
+                "ar": "الشبكات",
+                "de": "Netzwerke",
+                "en": "Networking",
+                "fr": "Réseaux",
+                "sw": "Mitandao"
+            },
+            "count": 2,
+            "percentage": 9.52
+        },
+        {
+            "categoryId": "0",
+            "categoryName": {
+                "ar": "غير مصنف",
+                "en": "Uncategorized"
+            },
+            "count": 2,
+            "percentage": 9.52
+        }
+    ]
 }
 ```
 
@@ -178,19 +295,174 @@ GET /analytics/infrastructure/distribution
 
 **Example:**
 ```http
-GET /analytics/infrastructure/by-category?categoryId=cat-123
+GET /analytics/infrastructure/by-category?categoryId=21
 ```
 
 **Response:**
 ```json
 [
-  {
-    "infrastructureId": "inf-001",
-    "infrastructureName": "Main Server",
-    "categoryId": "cat-123",
-    "vendor": "Vendor A",
-    "status": "active"
-  }
+    {
+        "infrastructureId": "3",
+        "infrastructureName": {
+            "ar": "Dell PowerEdge Server",
+            "de": "Dell Powerdge Server",
+            "en": "Dell PowerEdge Server",
+            "fr": "Dell PowerDge Server",
+            "sw": "Seva ya Dell Powerdge"
+        },
+        "model": "PowerEdge FC640",
+        "version": null,
+        "location": null,
+        "vendorName": {
+            "en": "Uncategorized",
+            "ar": "غير مصنف"
+        },
+        "categoryName": {
+            "ar": "الخوادم",
+            "de": "Server",
+            "en": "Servers",
+            "fr": "Serveurs",
+            "sw": "Seva"
+        },
+        "statusCode": "ACTIVE"
+    },
+    {
+        "infrastructureId": "4",
+        "infrastructureName": {
+            "ar": "Dell PowerEdge Server",
+            "de": "Dell Powerdge Server",
+            "en": "Dell PowerEdge Server",
+            "fr": "Dell PowerDge Server",
+            "sw": "Seva ya Dell Powerdge"
+        },
+        "model": "PowerEdge FC640",
+        "version": null,
+        "location": null,
+        "vendorName": {
+            "en": "Uncategorized",
+            "ar": "غير مصنف"
+        },
+        "categoryName": {
+            "ar": "الخوادم",
+            "de": "Server",
+            "en": "Servers",
+            "fr": "Serveurs",
+            "sw": "Seva"
+        },
+        "statusCode": "ACTIVE"
+    },
+    {
+        "infrastructureId": "2",
+        "infrastructureName": {
+            "ar": "Dell PowerEdge Server",
+            "de": "Dell Powerdge Server",
+            "en": "Dell PowerEdge Server",
+            "fr": "Dell PowerDge Server",
+            "sw": "Seva ya Dell Powerdge"
+        },
+        "model": "PowerEdge FC640",
+        "version": null,
+        "location": null,
+        "vendorName": {
+            "ar": "آخر",
+            "de": "zuletzt",
+            "en": "Other",
+            "fr": "dernier",
+            "sw": "Mwisho"
+        },
+        "categoryName": {
+            "ar": "الخوادم",
+            "de": "Server",
+            "en": "Servers",
+            "fr": "Serveurs",
+            "sw": "Seva"
+        },
+        "statusCode": "ACTIVE"
+    },
+    {
+        "infrastructureId": "99",
+        "infrastructureName": {
+            "ar": "Printrer-server",
+            "de": "Druckerserver",
+            "en": "Printrer-server",
+            "fr": "Serveur d'impression",
+            "sw": "Printa-seva"
+        },
+        "model": "PRIMERGY TX1330 M4",
+        "version": "6.1",
+        "location": "وزارة التنمية الإجتماعية-HQ",
+        "vendorName": {
+            "ar": "Fujitsu",
+            "de": "Fujitsu",
+            "en": "Fujitsu",
+            "fr": "Fujitsu",
+            "sw": "Fujitsu"
+        },
+        "categoryName": {
+            "ar": "الخوادم",
+            "de": "Server",
+            "en": "Servers",
+            "fr": "Serveurs",
+            "sw": "Seva"
+        },
+        "statusCode": "ACTIVE"
+    },
+    {
+        "infrastructureId": "104",
+        "infrastructureName": {
+            "ar": "خادم حصة",
+            "de": "Share-Server",
+            "en": "Share server",
+            "fr": "Partager le serveur",
+            "sw": "Shiriki seva"
+        },
+        "model": "VMware / Hyper-V",
+        "version": "7601",
+        "location": "Primary Data Center – HQ",
+        "vendorName": {
+            "ar": "HP",
+            "de": "HP",
+            "en": "HP",
+            "fr": "HP",
+            "sw": "HP"
+        },
+        "categoryName": {
+            "ar": "الخوادم",
+            "de": "Server",
+            "en": "Servers",
+            "fr": "Serveurs",
+            "sw": "Seva"
+        },
+        "statusCode": "ACTIVE"
+    },
+    {
+        "infrastructureId": "102",
+        "infrastructureName": {
+            "ar": "takaful-db-srv",
+            "de": "takaful-db-srv",
+            "en": "takaful-db-srv",
+            "fr": "takaful-db-srv",
+            "sw": "Takaful-db-srv"
+        },
+        "model": "Oracle 11G",
+        "version": "11",
+        "location": "Tadafur Data Center – HQ",
+        "vendorName": {
+            "ar": "OVM",
+            "de": "Ovm",
+            "en": "OVM",
+            "fr": "OVM",
+            "sw": "Ovm"
+        },
+        "categoryName": {
+            "ar": "الخوادم",
+            "de": "Server",
+            "en": "Servers",
+            "fr": "Serveurs",
+            "sw": "Seva"
+        },
+        "statusCode": "ACTIVE"
+    }
 ]
 ```
 
@@ -215,16 +487,116 @@ GET /analytics/infrastructure/per-vendor?limit=15
 **Response:**
 ```json
 [
-  {
-    "vendorName": "Vendor A",
-    "infrastructures": [
-      {
-        "infrastructureName": "Server A",
-        "count": 12
-      }
-    ],
-    "totalCount": 45
-  }
+    {
+        "vendorId": "30",
+        "vendorName": {
+            "ar": "آخر",
+            "de": "zuletzt",
+            "en": "Other",
+            "fr": "dernier",
+            "sw": "Mwisho"
+        },
+        "infrastructureCount": 3
+    },
+    {
+        "vendorId": "14",
+        "vendorName": {
+            "ar": "Vmware",
+            "de": "VMware",
+            "en": "Vmware",
+            "fr": "Vmware",
+            "sw": "VMware"
+        },
+        "infrastructureCount": 3
+    },
+    {
+        "vendorId": "9",
+        "vendorName": {
+            "ar": "ساب",
+            "de": "Saft",
+            "en": "SAP",
+            "fr": "Sève",
+            "sw": "SAP"
+        },
+        "infrastructureCount": 2
+    },
+    {
+        "vendorId": "19",
+        "vendorName": {
+            "ar": "Barracuda",
+            "de": "Barrakuda",
+            "en": "Barracuda",
+            "fr": "Barracuda",
+            "sw": "Barracuda"
+        },
+        "infrastructureCount": 2
+    },
+    {
+        "vendorId": "2",
+        "vendorName": {
+            "ar": "أوراكل",
+            "de": "Orakel",
+            "en": "Oracle",
+            "fr": "Oracle",
+            "sw": "Oracle"
+        },
+        "infrastructureCount": 2
+    },
+    {
+        "vendorId": "18",
+        "vendorName": {
+            "ar": "Paloalto",
+            "de": "Paloalto",
+            "en": "Paloalto",
+            "fr": "Paloalto",
+            "sw": "Paloalto"
+        },
+        "infrastructureCount": 1
+    },
+    {
+        "vendorId": "1",
+        "vendorName": {
+            "ar": "مايكروسوفت",
+            "de": "Microsoft",
+            "en": "Microsoft",
+            "fr": "Microsoft",
+            "sw": "Microsoft"
+        },
+        "infrastructureCount": 1
+    },
+    {
+        "vendorId": "20",
+        "vendorName": {
+            "ar": "CNS",
+            "de": "ZNS",
+            "en": "CNS",
+            "fr": "SNC",
+            "sw": "CNS"
+        },
+        "infrastructureCount": 1
+    },
+    {
+        "vendorId": "21",
+        "vendorName": {
+            "ar": "Fujitsu",
+            "de": "Fujitsu",
+            "en": "Fujitsu",
+            "fr": "Fujitsu",
+            "sw": "Fujitsu"
+        },
+        "infrastructureCount": 1
+    },
+    {
+        "vendorId": "22",
+        "vendorName": {
+            "ar": "OVM",
+            "de": "Ovm",
+            "en": "OVM",
+            "fr": "OVM",
+            "sw": "Ovm"
+        },
+        "infrastructureCount": 1
+    }
 ]
 ```
 
@@ -249,16 +621,146 @@ GET /analytics/infrastructure/ecosystem-composition?limit=20
 **Response:**
 ```json
 [
-  {
-    "ecosystemType": "Cloud Infrastructure",
-    "count": 78,
-    "percentage": 42.5
-  },
-  {
-    "ecosystemType": "On-Premise Infrastructure",
-    "count": 56,
-    "percentage": 30.5
-  }
+    {
+        "infrastructureId": "94",
+        "infrastructureName": {
+            "ar": "WSG",
+            "de": "WSG",
+            "en": "WSG",
+            "fr": "WSG",
+            "sw": "Wsg"
+        },
+        "applicationsCount": 3,
+        "integrationsCount": 2,
+        "licensesCount": 2,
+        "totalComponents": 7
+    },
+    {
+        "infrastructureId": "92",
+        "infrastructureName": {
+            "ar": "خوادم Microsoft Power BI",
+            "de": "Microsoft Power BI-Server",
+            "en": "Microsoft Power BI Servers",
+            "fr": "Serveurs Microsoft Power BI",
+            "sw": "Seva za Microsoft Power BI"
+        },
+        "applicationsCount": 3,
+        "integrationsCount": 1,
+        "licensesCount": 3,
+        "totalComponents": 7
+    },
+    {
+        "infrastructureId": "89",
+        "infrastructureName": {
+            "ar": "خوادم Oracle ERP Cloud",
+            "de": "Oracle ERP Cloud-Server",
+            "en": "Oracle ERP Cloud Servers",
+            "fr": "Serveurs cloud Oracle ERP",
+            "sw": "Seva za wingu za Oracle ERP"
+        },
+        "applicationsCount": 2,
+        "integrationsCount": 1,
+        "licensesCount": 3,
+        "totalComponents": 6
+    },
+    {
+        "infrastructureId": "91",
+        "infrastructureName": {
+            "ar": "خوادم Google Workspace",
+            "de": "Google Workspace-Server",
+            "en": "Google Workspace servers",
+            "fr": "Serveurs Google Workspace",
+            "sw": "Seva za Google Workspace"
+        },
+        "applicationsCount": 2,
+        "integrationsCount": 1,
+        "licensesCount": 3,
+        "totalComponents": 6
+    },
+    {
+        "infrastructureId": "98",
+        "infrastructureName": {
+            "ar": "جهاز النسخ الاحتياطي",
+            "de": "Backup-Gerät",
+            "en": "Backup device",
+            "fr": "Périphérique de sauvegarde",
+            "sw": "Kifaa cha chelezo"
+        },
+        "applicationsCount": 3,
+        "integrationsCount": 2,
+        "licensesCount": 1,
+        "totalComponents": 6
+    },
+    {
+        "infrastructureId": "103",
+        "infrastructureName": {
+            "ar": "LBM",
+            "de": "LBM",
+            "en": "LBM",
+            "fr": "LBM",
+            "sw": "Lbm"
+        },
+        "applicationsCount": 1,
+        "integrationsCount": 3,
+        "licensesCount": 2,
+        "totalComponents": 6
+    },
+    {
+        "infrastructureId": "105",
+        "infrastructureName": {
+            "ar": "eserv-treport-pro-1",
+            "de": "eserv-treport-pro-1",
+            "en": "eserv-treport-pro-1",
+            "fr": "eserv-treport-pro-1",
+            "sw": "ESERV-TREPORT-pro-1"
+        },
+        "applicationsCount": 2,
+        "integrationsCount": 3,
+        "licensesCount": 1,
+        "totalComponents": 6
+    },
+    {
+        "infrastructureId": "104",
+        "infrastructureName": {
+            "ar": "خادم حصة",
+            "de": "Share-Server",
+            "en": "Share server",
+            "fr": "Partager le serveur",
+            "sw": "Shiriki seva"
+        },
+        "applicationsCount": 2,
+        "integrationsCount": 2,
+        "licensesCount": 1,
+        "totalComponents": 5
+    },
+    {
+        "infrastructureId": "100",
+        "infrastructureName": {
+            "ar": "EServ-Report-Test",
+            "de": "EServ-Report-Test",
+            "en": "EServ-Report-Test",
+            "fr": "EServ-Rapport-Test",
+            "sw": "Mtihani wa EServ-Ripoti"
+        },
+        "applicationsCount": 1,
+        "integrationsCount": 2,
+        "licensesCount": 2,
+        "totalComponents": 5
+    },
+    {
+        "infrastructureId": "102",
+        "infrastructureName": {
+            "ar": "takaful-db-srv",
+            "de": "takaful-db-srv",
+            "en": "takaful-db-srv",
+            "fr": "takaful-db-srv",
+            "sw": "Takaful-db-srv"
+        },
+        "applicationsCount": 2,
+        "integrationsCount": 3,
+        "licensesCount": 0,
+        "totalComponents": 5
+    }
 ]
 ```
 
