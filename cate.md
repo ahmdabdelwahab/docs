@@ -117,38 +117,86 @@ GET /analytics/infrastructure/categories/class?categoryId=1
 {
     "categoryId": "1",
     "categoryName": {
-        "en": "Hardware",
         "ar": "الأجهزة",
         "de": "Geräte",
+        "en": "Hardware",
         "fr": "Dispositifs",
         "sw": "Vifaa"
     },
-    "totalInfrastructureCount": 84,
+    "totalInfrastructureCount": 8,
     "subcategoriesCount": 6,
     "subcategories": [
         {
             "subcategoryId": "20",
             "subcategoryName": {
-                "en": "Servers",
                 "ar": "الخوادم",
                 "de": "Server",
+                "en": "Servers",
                 "fr": "Serveurs",
                 "sw": "Seva"
             },
-            "infrastructureCount": 50,
-            "percentage": 59.52
+            "infrastructureCount": 6,
+            "percentage": 75.0
         },
         {
             "subcategoryId": "30",
             "subcategoryName": {
-                "en": "Storage Devices",
                 "ar": "أجهزة التخزين",
                 "de": "Speichergeräte",
+                "en": "Storage Devices",
                 "fr": "Dispositifs de stockage",
                 "sw": "Vifaa vya kuhifadhi"
             },
-            "infrastructureCount": 20,
-            "percentage": 23.81
+            "infrastructureCount": 1,
+            "percentage": 12.5
+        },
+        {
+            "subcategoryId": "40",
+            "subcategoryName": {
+                "ar": "معدات الشبكات",
+                "de": "Netzwerkausrüstung",
+                "en": "Networking Equipment",
+                "fr": "Équipement réseau",
+                "sw": "Vifaa vya mtandao"
+            },
+            "infrastructureCount": 1,
+            "percentage": 12.5
+        },
+        {
+            "subcategoryId": "50",
+            "subcategoryName": {
+                "ar": "معدات مركز البيانات",
+                "de": "Rechenzentrumsgeräte",
+                "en": "Data Center Equipment",
+                "fr": "Équipement de centre de données",
+                "sw": "Vifaa vya kituo cha data"
+            },
+            "infrastructureCount": 0,
+            "percentage": 0.0
+        },
+        {
+            "subcategoryId": "56",
+            "subcategoryName": {
+                "ar": "Security measures",
+                "de": "Sicherheitsmessungen",
+                "en": "Security measures",
+                "fr": "Mesures de sécurité",
+                "sw": "Vipimo vya usalama"
+            },
+            "infrastructureCount": 0,
+            "percentage": 0.0
+        },
+        {
+            "subcategoryId": "60",
+            "subcategoryName": {
+                "ar": "آخر",
+                "de": "zuletzt",
+                "en": "Other",
+                "fr": "dernier",
+                "sw": "Mwisho"
+            },
+            "infrastructureCount": 0,
+            "percentage": 0.0
         }
     ]
 }
@@ -204,7 +252,7 @@ Returns detailed information about all infrastructure items within a category an
 #### Example Request
 
 ```
-GET /analytics/infrastructure/categories/class/product?categoryId=20
+GET /analytics/infrastructure/categories/class/product?categoryId=21
 ```
 
 #### Response
@@ -212,58 +260,164 @@ GET /analytics/infrastructure/categories/class/product?categoryId=20
 ```json
 [
     {
-        "infrastructureId": "145",
+        "infrastructureId": "3",
         "infrastructureName": {
-            "en": "Dell PowerEdge R740",
-            "ar": "ديل باور ايدج R740",
-            "de": "Dell PowerEdge R740",
-            "fr": "Dell PowerEdge R740",
-            "sw": "Dell PowerEdge R740"
+            "ar": "Dell PowerEdge Server",
+            "de": "Dell Powerdge Server",
+            "en": "Dell PowerEdge Server",
+            "fr": "Dell PowerDge Server",
+            "sw": "Seva ya Dell Powerdge"
         },
-        "model": "R740",
-        "version": "Gen 14",
-        "location": "Data Center A - Rack 5",
+        "model": "PowerEdge FC640",
+        "version": null,
+        "location": null,
         "vendorName": {
-            "en": "Dell Technologies",
-            "ar": "ديل تكنولوجيز",
-            "de": "Dell Technologies",
-            "fr": "Dell Technologies",
-            "sw": "Dell Technologies"
+            "en": "Uncategorized",
+            "ar": "غير مصنف"
         },
         "categoryName": {
-            "en": "Physical Servers",
-            "ar": "الخوادم الفعلية",
-            "de": "Physische Server",
-            "fr": "Serveurs physiques",
-            "sw": "Seva halisi"
+            "ar": "الخوادم",
+            "de": "Server",
+            "en": "Servers",
+            "fr": "Serveurs",
+            "sw": "Seva"
         },
         "statusCode": "ACTIVE"
     },
     {
-        "infrastructureId": "146",
+        "infrastructureId": "4",
         "infrastructureName": {
-            "en": "HP ProLiant DL380 Gen10",
-            "ar": "اتش بي برولينت DL380 الجيل 10",
-            "de": "HP ProLiant DL380 Gen10",
-            "fr": "HP ProLiant DL380 Gen10",
-            "sw": "HP ProLiant DL380 Gen10"
+            "ar": "Dell PowerEdge Server",
+            "de": "Dell Powerdge Server",
+            "en": "Dell PowerEdge Server",
+            "fr": "Dell PowerDge Server",
+            "sw": "Seva ya Dell Powerdge"
         },
-        "model": "DL380",
-        "version": "Gen10",
-        "location": "Data Center B - Rack 12",
+        "model": "PowerEdge FC640",
+        "version": null,
+        "location": null,
         "vendorName": {
-            "en": "Hewlett Packard Enterprise",
-            "ar": "هيوليت باكارد انتربرايز",
-            "de": "Hewlett Packard Enterprise",
-            "fr": "Hewlett Packard Enterprise",
-            "sw": "Hewlett Packard Enterprise"
+            "en": "Uncategorized",
+            "ar": "غير مصنف"
         },
         "categoryName": {
-            "en": "Physical Servers",
-            "ar": "الخوادم الفعلية",
-            "de": "Physische Server",
-            "fr": "Serveurs physiques",
-            "sw": "Seva halisi"
+            "ar": "الخوادم",
+            "de": "Server",
+            "en": "Servers",
+            "fr": "Serveurs",
+            "sw": "Seva"
+        },
+        "statusCode": "ACTIVE"
+    },
+    {
+        "infrastructureId": "2",
+        "infrastructureName": {
+            "ar": "Dell PowerEdge Server",
+            "de": "Dell Powerdge Server",
+            "en": "Dell PowerEdge Server",
+            "fr": "Dell PowerDge Server",
+            "sw": "Seva ya Dell Powerdge"
+        },
+        "model": "PowerEdge FC640",
+        "version": null,
+        "location": null,
+        "vendorName": {
+            "ar": "آخر",
+            "de": "zuletzt",
+            "en": "Other",
+            "fr": "dernier",
+            "sw": "Mwisho"
+        },
+        "categoryName": {
+            "ar": "الخوادم",
+            "de": "Server",
+            "en": "Servers",
+            "fr": "Serveurs",
+            "sw": "Seva"
+        },
+        "statusCode": "ACTIVE"
+    },
+    {
+        "infrastructureId": "99",
+        "infrastructureName": {
+            "ar": "Printrer-server",
+            "de": "Druckerserver",
+            "en": "Printrer-server",
+            "fr": "Serveur d'impression",
+            "sw": "Printa-seva"
+        },
+        "model": "PRIMERGY TX1330 M4",
+        "version": "6.1",
+        "location": "وزارة التنمية الإجتماعية-HQ",
+        "vendorName": {
+            "ar": "Fujitsu",
+            "de": "Fujitsu",
+            "en": "Fujitsu",
+            "fr": "Fujitsu",
+            "sw": "Fujitsu"
+        },
+        "categoryName": {
+            "ar": "الخوادم",
+            "de": "Server",
+            "en": "Servers",
+            "fr": "Serveurs",
+            "sw": "Seva"
+        },
+        "statusCode": "ACTIVE"
+    },
+    {
+        "infrastructureId": "104",
+        "infrastructureName": {
+            "ar": "خادم حصة",
+            "de": "Share-Server",
+            "en": "Share server",
+            "fr": "Partager le serveur",
+            "sw": "Shiriki seva"
+        },
+        "model": "VMware / Hyper-V",
+        "version": "7601",
+        "location": "Primary Data Center – HQ",
+        "vendorName": {
+            "ar": "HP",
+            "de": "HP",
+            "en": "HP",
+            "fr": "HP",
+            "sw": "HP"
+        },
+        "categoryName": {
+            "ar": "الخوادم",
+            "de": "Server",
+            "en": "Servers",
+            "fr": "Serveurs",
+            "sw": "Seva"
+        },
+        "statusCode": "ACTIVE"
+    },
+    {
+        "infrastructureId": "102",
+        "infrastructureName": {
+            "ar": "takaful-db-srv",
+            "de": "takaful-db-srv",
+            "en": "takaful-db-srv",
+            "fr": "takaful-db-srv",
+            "sw": "Takaful-db-srv"
+        },
+        "model": "Oracle 11G",
+        "version": "11",
+        "location": "Tadafur Data Center – HQ",
+        "vendorName": {
+            "ar": "OVM",
+            "de": "Ovm",
+            "en": "OVM",
+            "fr": "OVM",
+            "sw": "Ovm"
+        },
+        "categoryName": {
+            "ar": "الخوادم",
+            "de": "Server",
+            "en": "Servers",
+            "fr": "Serveurs",
+            "sw": "Seva"
         },
         "statusCode": "ACTIVE"
     }
@@ -299,228 +453,3 @@ GET /analytics/infrastructure/categories/class/product?categoryId=20
   - **Leaf category**: Returns infrastructure directly assigned to it
 
 ---
-
-## SQL Query Patterns
-
-### 1. Root Categories Query Pattern
-
-```sql
-WITH RECURSIVE category_hierarchy AS (
-    -- Start with infrastructure and their categories
-    SELECT i.id as infrastructure_id, ic.id as category_id, ic.parent_id
-    FROM sam_infrastructure i
-    INNER JOIN infrastructure_category ic ON i.infrastructure_category_id = ic.id
-    WHERE i.status_code = 'ACTIVE'
-    
-    UNION ALL
-    
-    -- Traverse UP to parent categories
-    SELECT ch.infrastructure_id, parent.id, parent.parent_id
-    FROM category_hierarchy ch
-    INNER JOIN infrastructure_category parent ON ch.parent_id = parent.id
-),
-root_categories AS (
-    -- Filter for root level (parent_id IS NULL)
-    SELECT DISTINCT infrastructure_id, category_id
-    FROM category_hierarchy
-    WHERE parent_id IS NULL
-)
-SELECT category_id, COUNT(DISTINCT infrastructure_id)
-FROM root_categories
-GROUP BY category_id
-```
-
-### 2. Subcategories Query Pattern
-
-```sql
-WITH RECURSIVE category_descendants AS (
-    -- Start with direct children
-    SELECT ic.id, ic.id as direct_child_id
-    FROM infrastructure_category ic
-    WHERE ic.parent_id = :categoryId
-    
-    UNION ALL
-    
-    -- Traverse DOWN to all descendants
-    SELECT child.id, cd.direct_child_id
-    FROM infrastructure_category child
-    INNER JOIN category_descendants cd ON child.parent_id = cd.id
-)
-SELECT 
-    direct_child_id,
-    COUNT(DISTINCT i.id) as count
-FROM category_descendants cd
-LEFT JOIN sam_infrastructure i ON i.infrastructure_category_id = cd.id
-GROUP BY direct_child_id
-```
-
-### 3. Infrastructure Products Query Pattern
-
-```sql
-WITH RECURSIVE category_tree AS (
-    -- Start with selected category
-    SELECT id FROM infrastructure_category WHERE id = :categoryId
-    
-    UNION ALL
-    
-    -- Get all children
-    SELECT child.id
-    FROM infrastructure_category child
-    INNER JOIN category_tree parent ON child.parent_id = parent.id
-)
-SELECT i.*, v.name_translations as vendor_name
-FROM sam_infrastructure i
-INNER JOIN category_tree ct ON i.infrastructure_category_id = ct.id
-LEFT JOIN sam_vendor v ON i.vendor_id = v.id
-WHERE i.status_code = 'ACTIVE'
-```
-
----
-
-## Data Model
-
-### Entity Relationships
-
-```
-infrastructure_category
-    ├── id (PK)
-    ├── parent_id (FK → infrastructure_category.id)
-    ├── name_translations (JSONB)
-    └── status_code
-
-sam_infrastructure
-    ├── id (PK)
-    ├── infrastructure_category_id (FK → infrastructure_category.id)
-    ├── vendor_id (FK → sam_vendor.id)
-    ├── name_translations (JSONB)
-    ├── model
-    ├── version
-    ├── location
-    └── status_code
-
-sam_vendor
-    ├── id (PK)
-    └── name_translations (JSONB)
-```
-
-### Category Hierarchy Example
-
-```
-Hardware (id=1, parent_id=NULL)  ← ROOT
-    ├── Servers (id=20, parent_id=1)  ← SUBCATEGORY
-    │   ├── Physical Servers (id=21, parent_id=20)  ← LEAF
-    │   └── Virtual Servers (id=22, parent_id=20)  ← LEAF
-    ├── Storage Devices (id=30, parent_id=1)  ← SUBCATEGORY
-    │   ├── SAN Storage (id=31, parent_id=30)  ← LEAF
-    │   └── NAS Storage (id=32, parent_id=30)  ← LEAF
-    └── Networking Equipment (id=40, parent_id=1)  ← SUBCATEGORY
-        ├── Switches (id=41, parent_id=40)  ← LEAF
-        └── Routers (id=42, parent_id=40)  ← LEAF
-```
-
----
-
-## Error Handling
-
-All endpoints include error handling with:
-
-- **Try-catch blocks** around database queries
-- **Logging** of errors with context (category ID, error message)
-- **Empty results** returned on error instead of throwing exceptions
-- **Default values** for missing optional fields (e.g., uncategorized infrastructure)
-
-### Example Error Scenarios
-
-| Scenario | Behavior |
-|----------|----------|
-| Category not found | Returns empty subcategories list with default parent info |
-| Invalid category ID format | Logs error, returns empty result |
-| Database connection failure | Logs error, returns empty result |
-| Null vendor | Returns infrastructure with vendor name as empty/null |
-
----
-
-## Performance Considerations
-
-1. **Indexes Required:**
-   - `infrastructure_category(parent_id)`
-   - `sam_infrastructure(infrastructure_category_id)`
-   - `sam_infrastructure(vendor_id)`
-   - `sam_infrastructure(status_code)`
-
-2. **Query Optimization:**
-   - Recursive CTEs limited to 10 levels max (prevents infinite loops)
-   - Status filtering at query level (not in application)
-   - DISTINCT used only where necessary
-
-3. **Caching Recommendations:**
-   - Root categories distribution changes infrequently → cache for 5-10 minutes
-   - Subcategories relatively stable → cache for 2-5 minutes
-   - Infrastructure products change more frequently → cache for 30-60 seconds
-
----
-
-## Usage Examples
-
-### JavaScript/TypeScript
-
-```typescript
-// Level 1: Get root categories
-const rootCategories = await fetch('/analytics/infrastructure/categories')
-    .then(res => res.json());
-
-// Level 2: Drill down to subcategories
-const categoryId = rootCategories.categoryDistributions[0].categoryId;
-const subcategories = await fetch(`/analytics/infrastructure/categories/class?categoryId=${categoryId}`)
-    .then(res => res.json());
-
-// Level 3: Get infrastructure products
-const subcategoryId = subcategories.subcategories[0].subcategoryId;
-const products = await fetch(`/analytics/infrastructure/categories/class/product?categoryId=${subcategoryId}`)
-    .then(res => res.json());
-```
-
-### cURL
-
-```bash
-# Get root categories
-curl -X GET "http://localhost:8080/analytics/infrastructure/categories"
-
-# Get subcategories for Hardware (id=1)
-curl -X GET "http://localhost:8080/analytics/infrastructure/categories/class?categoryId=1"
-
-# Get infrastructure products for Servers (id=20)
-curl -X GET "http://localhost:8080/analytics/infrastructure/categories/class/product?categoryId=20"
-```
-
----
-
-## Multilingual Support
-
-All endpoints return multilingual data in JSONB format with the following language codes:
-
-- `en` - English
-- `ar` - Arabic
-- `de` - German
-- `fr` - French
-- `sw` - Swahili
-
-Frontend applications should extract the appropriate language based on user preference:
-
-```typescript
-const displayName = category.categoryName[userLanguage] || category.categoryName['en'];
-```
-
----
-
-## Version History
-
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0 | 2025-11-10 | Initial release with three-level drill-down |
-
----
-
-## Support
-
-For issues or questions, contact the development team or refer to the main API documentation.
