@@ -766,38 +766,273 @@ GET /analytics/infrastructure/ecosystem-composition?limit=20
 
 ---
 
-## Error Handling
+# Infrastructure Portfolio Hierarchy API
 
-All endpoints return standard HTTP status codes:
+## Overview
+Unified endpoint for infrastructure portfolio analytics with hierarchical drill-down capability. Supports 4 levels of data granularity from high-level category distribution to specific product details.
 
-- `200 OK` - Successful request
-- `400 Bad Request` - Invalid parameters
-- `404 Not Found` - Resource not found
-- `500 Internal Server Error` - Server-side error
-
-## Architecture
-
-This controller follows the layered architecture pattern:
-
+## Endpoint
 ```
-Controller (InfrastructureAnalyticsController)
-    ↓
-Service (InfrastructureAnalyticsService)
-    ↓
-Repository/DAO Layer
-    ↓
-Database
+GET /analytics/infrastructure/portfolio
 ```
 
-## Technologies
+## Hierarchy Levels
 
-- **Spring Boot** - Web framework
-- **Spring Web** - REST API support
-- **Lombok** - Reduces boilerplate code with `@RequiredArgsConstructor`
+### Level 1: Portfolio Distribution (No Parameters)
+Returns infrastructure distribution across all categories with counts and percentages.
+
+**Request:**
+```http
+GET /analytics/infrastructure/portfolio
+```
+
+**Response:**
+```json
+{
+  "totalInfrastructure": 150,
+  "categoryDistributions": [
+    {
+      "categoryId": "1",
+      "categoryName": {
+        "en": "Hardware",
+        "ar": "الأجهزة"
+      },
+      "count": 50,
+      "percentage": 33.33
+    },
+    {
+      "categoryId": "2",
+      "categoryName": {
+        "en": "Software",
+        "ar": "البرمجيات"
+      },
+      "count": 100,
+      "percentage": 66.67
+    }
+  ]
+}
+```
+
+**Response Type:** `InfrastructurePortfolioDistributionDto`
+
+---
+
+### Level 2: Subcategories/Classes (categoryId)
+Returns subcategories within a specific category with infrastructure counts and percentages.
+
+**Request:**
+```http
+GET /analytics/infrastructure/portfolio?categoryId=1
+```
+
+**Response:**
+```json
+{
+  "categoryId": "1",
+  "categoryName": {
+    "en": "Hardware",
+    "ar": "الأجهزة"
+  },
+  "totalInfrastructure": 50,
+  "totalSubcategories": 3,
+  "subcategories": [
+    {
+      "subcategoryId": "10",
+      "subcategoryName": {
+        "en": "Servers",
+        "ar": "الخوادم"
+      },
+      "infrastructureCount": 20,
+      "percentage": 40.0
+    },
+    {
+      "subcategoryId": "11",
+      "subcategoryName": {
+        "en": "Network Devices",
+        "ar": "أجهزة الشبكة"
+      },
+      "infrastructureCount": 30,
+      "percentage": 60.0
+    }
+  ]
+}
+```
+
+**Response Type:** `InfrastructureSubcategoriesDto`
+
+---
+
+### Level 3: Class Products (categoryId + classId)
+Returns grouped infrastructure items within a specific class with instance counts and percentages.
+
+**Request:**
+```http
+GET /analytics/infrastructure/portfolio?categoryId=1&classId=10
+```
+
+**Response:**
+```json
+{
+  "classId": "10",
+  "className": {
+    "en": "Servers",
+    "ar": "الخوادم",
+    "de": "Server",
+    "fr": "Serveurs"
+  },
+  "totalInfrastructure": 6,
+  "infrastructures": [
+    {
+      "infrastructureId": "3",
+      "infrastructureName": {
+        "en": "Dell PowerEdge Server",
+        "ar": "Dell PowerEdge Server"
+      },
+      "model": "PowerEdge FC640",
+      "version": null,
+      "location": null,
+      "vendorName": {
+        "en": "Dell",
+        "ar": "ديل"
+      },
+      "count": 2,
+      "percentage": 33.33
+    },
+    {
+      "infrastructureId": "99",
+      "infrastructureName": {
+        "en": "Printer-server",
+        "ar": "Printrer-server"
+      },
+      "model": "PRIMERGY TX1330 M4",
+      "version": "6.1",
+      "location": "Ministry HQ",
+      "vendorName": {
+        "en": "Fujitsu",
+        "ar": "Fujitsu"
+      },
+      "count": 1,
+      "percentage": 16.67
+    }
+  ]
+}
+```
+
+**Response Type:** `InfrastructureClassProductsDto`
+
+**Key Features:**
+- Infrastructure items grouped by unique characteristics (name, model, version, vendor)
+- `count` shows number of instances for each group
+- `percentage` calculated based on total infrastructure instances
+- `totalInfrastructure` is sum of all counts (6 = 2+1+1+1+1)
+- `categoryName` and `statusCode` excluded (not needed at this level)
+
+---
+
+### Level 4: Specific Product (productId)
+Returns detailed information for a specific infrastructure product.
+
+**Request:**
+```http
+GET /analytics/infrastructure/portfolio?productId=3
+```
+
+**Response:**
+```json
+[
+  {
+    "infrastructureId": "3",
+    "infrastructureName": {
+      "en": "Dell PowerEdge Server",
+      "ar": "Dell PowerEdge Server"
+    },
+    "model": "PowerEdge FC640",
+    "version": null,
+    "location": "Data Center A",
+    "vendorName": {
+      "en": "Dell",
+      "ar": "ديل"
+    },
+    "categoryName": {
+      "en": "Servers",
+      "ar": "الخوادم"
+    },
+    "statusCode": "ACTIVE",
+    "count": 1,
+    "percentage": 100.0
+  }
+]
+```
+
+**Response Type:** `List<InfrastructureDetailDto>`
+
+---
+
+## Parameters
+
+| Parameter    | Type   | Required | Description                                    |
+|-------------|--------|----------|------------------------------------------------|
+| `categoryId` | String | No       | Filter by category ID (enables Level 2)       |
+| `classId`    | String | No       | Filter by class/subcategory ID (requires categoryId, enables Level 3) |
+| `productId`  | String | No       | Get specific product details (Level 4)         |
+
+## Semantic Consistency
+
+All levels follow consistent naming conventions:
+
+- **Total counts**: `totalInfrastructure`, `totalSubcategories`
+- **Count fields**: `count`, `infrastructureCount`
+- **Percentage fields**: `percentage` (always Double, 2 decimal places)
+- **Name fields**: Multi-language maps with keys: `en`, `ar`, `de`, `fr`, `sw`
+
+## Business Logic
+
+### Percentage Calculation
+- **Level 1**: Percentage of total infrastructure across all categories
+- **Level 2**: Percentage within parent category
+- **Level 3**: Percentage based on count relative to total infrastructure instances
+
+### Grouping (Level 3)
+Infrastructure items are grouped by:
+- Infrastructure name
+- Model
+- Version
+- Location
+- Vendor
+
+Items with identical values for all these fields are counted as one group with a `count` field showing the number of instances.
+
+### Recursive Querying
+Uses PostgreSQL recursive CTEs to traverse the category tree and include all child categories in results.
+
+## Examples
+
+### Drill-down Workflow
+
+1. **Start**: Get portfolio overview
+   ```
+   GET /analytics/infrastructure/portfolio
+   ```
+
+2. **Select Category**: User clicks on "Hardware" (categoryId=1)
+   ```
+   GET /analytics/infrastructure/portfolio?categoryId=1
+   ```
+
+3. **Select Class**: User clicks on "Servers" (classId=10)
+   ```
+   GET /analytics/infrastructure/portfolio?categoryId=1&classId=10
+   ```
+
+4. **View Details**: User clicks on specific server (productId=3)
+   ```
+   GET /analytics/infrastructure/portfolio?productId=3
+   ```
 
 ## Notes
 
-- All endpoints return JSON responses wrapped in `ResponseEntity`
-- The controller uses constructor injection via Lombok's `@RequiredArgsConstructor`
-- Default parameter values are provided for pagination and localization
-- The controller is stateless and thread-safe
+- All active infrastructure only (`status_code = 'ACTIVE'`)
+- Supports multi-language translations for all name fields
+- Empty translations fallback to "Unknown" or default values
+- Percentages rounded to 2 decimal places
+- Level 3 excludes `categoryName` (redundant) and `statusCode` (not needed)
