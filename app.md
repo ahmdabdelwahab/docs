@@ -495,3 +495,41 @@ For unknown/error cases:
 
 ---
 
+
+## Endpoint
+
+### Get Integration Density
+
+**GET** `/analytics/applications/integration-density`
+
+Returns the integration density metric for the application portfolio.
+
+#### Request
+
+No parameters required.
+
+```http
+GET /analytics/applications/integration-density HTTP/1.1
+Host: localhost:8080
+```
+
+#### Response
+
+```json
+{
+    "integrationDensity": 4.7,
+    "totalApplications": 29,
+    "totalIntegrations": 136
+}
+```
+
+#### Response Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `integrationDensity` | Double | Average number of integrations per application (rounded to 1 decimal) |
+| `totalApplications` | Long | Total count of active applications in the portfolio |
+| `totalIntegrations` | Long | Total count of all integration relationships (both required and utilized) |
+
+---
+
