@@ -662,3 +662,299 @@
   - HOURS: divide by 24
   - DAYS: use as-is
   - MONTHS: multiply by 30
+
+---
+
+## 15. Impact by Job Title Details
+
+**Endpoint:** `GET /analytics/process-dashboard/impact-by-job-title/details`
+
+**Purpose:** Drill into a specific job title bar in the Impact by Job Title chart to see the individual activities and roles assigned to that job title.
+
+**Parameters:**
+- `jobTitleId` (required): The org_chart_tree ID for the job title (node_type_id = 103)
+- `processPurpose` (required): 1 for AS_IS, 2 for TO_BE
+- `directorateIds` (optional): Comma-separated directorate IDs
+- `departmentIds` (optional): Comma-separated department IDs
+- `sectionIds` (optional): Comma-separated section IDs
+- `processIds` (optional): Comma-separated process IDs
+
+**Response Example:**
+```json
+{
+  "jobTitleId": 456,
+  "jobTitleNameTranslations": {
+    "en": "Senior Manager",
+    "ar": "مدير أول"
+  },
+  "processPurpose": 1,
+  "processPurposeText": "AS_IS",
+  "activities": [
+    {
+      "activityId": 789,
+      "activityName": {
+        "en": "Review Application",
+        "ar": "مراجعة الطلب"
+      },
+      "processId": 123,
+      "processName": {
+        "en": "Employee Onboarding",
+        "ar": "إلحاق الموظف"
+      },
+      "roleId": 321,
+      "roleName": {
+        "en": "HR Manager",
+        "ar": "مدير الموارد البشرية"
+      },
+      "assignedOrgUnit": "Human Resources"
+    }
+  ],
+  "roles": [
+    {
+      "roleId": 321,
+      "roleName": {
+        "en": "HR Manager",
+        "ar": "مدير الموارد البشرية"
+      },
+      "processId": 123,
+      "processName": {
+        "en": "Employee Onboarding",
+        "ar": "إلحاق الموظف"
+      },
+      "activityCount": 5,
+      "assignedOrgUnit": "Human Resources"
+    }
+  ]
+}
+```
+
+**Notes:**
+- `jobTitleId`: ID from `org_chart_tree` where `node_type_id = 103` (job title nodes)
+- `activities`: All activities assigned to roles that are linked to this job title
+- `roles`: All roles linked to this job title, with their activity counts
+- `assignedOrgUnit`: Owner organization of the process
+- Only returns data from root processes (excludes subprocesses)
+- Filtered by the specified `processPurpose` (AS_IS or TO_BE)
+
+---
+
+## 16. Job Title Time Details
+
+**Endpoint:** `GET /analytics/process-dashboard/job-title-time/details`
+
+**Purpose:** Drill into a specific job title bar in the Job Title Time Utilization chart to see the time breakdown by individual activities.
+
+**Parameters:**
+- `jobTitleId` (required): The org_chart_tree ID for the job title (node_type_id = 103)
+- `processPurpose` (required): 1 for AS_IS, 2 for TO_BE
+- `directorateIds` (optional): Comma-separated directorate IDs
+- `departmentIds` (optional): Comma-separated department IDs
+- `sectionIds` (optional): Comma-separated section IDs
+- `processIds` (optional): Comma-separated process IDs
+- `includeTransactions` (optional, default: false): Whether to multiply time by transaction volume
+
+**Response Example:**
+```json
+{
+  "jobTitleId": 456,
+  "jobTitleNameTranslations": {
+    "en": "Senior Manager",
+    "ar": "مدير أول"
+  },
+  "processPurpose": 1,
+  "processPurposeText": "AS_IS",
+  "includeTransactions": false,
+  "totalDays": 125.50,
+  "activities": [
+    {
+      "activityId": 789,
+      "activityName": {
+        "en": "Review Application",
+        "ar": "مراجعة الطلب"
+      },
+      "processId": 123,
+      "processName": {
+        "en": "Employee Onboarding",
+        "ar": "إلحاق الموظف"
+      },
+      "roleId": 321,
+      "roleName": {
+        "en": "HR Manager",
+        "ar": "مدير الموارد البشرية"
+      },
+      "netProcessingTime": 2.0,
+      "netProcessingTimeUnit": 3,
+      "netProcessingTimeUnitText": "DAYS",
+      "probability": 85.5,
+      "transactionVolume": 100,
+      "calculatedMinutes": 14688.0,
+      "calculatedDays": 30.60
+    }
+  ]
+}
+```
+
+**Notes:**
+- `totalDays`: Sum of all calculated days for activities assigned to this job title
+- `netProcessingTime`: Net processing time value from the activity
+- `netProcessingTimeUnit`: Enum value - 1=MINUTES, 2=HOURS, 3=DAYS, 4=MONTHS
+- `netProcessingTimeUnitText`: Human-readable unit text
+- `probability`: Calculated probability (0-100)
+- `transactionVolume`: Number of transactions (if `includeTransactions` is true, otherwise defaults to 1)
+- `calculatedMinutes`: Result of formula: `netProcessingTime * unit_conversion * (probability/100) * transactionVolume`
+- `calculatedDays`: `calculatedMinutes / 480` (8-hour working days)
+- Unit conversions to minutes: MINUTES=1, HOURS=60, DAYS=1440, MONTHS=43200
+- Only returns data from root processes (excludes subprocesses)
+
+---
+
+## 17. Activity Type Distribution Details
+
+**Endpoint:** `GET /analytics/process-dashboard/activity-type-distribution/details`
+
+**Purpose:** Drill into a specific activity type in the Activity Type Distribution chart to see all activities of that type.
+
+**Parameters:**
+- `activityTypeId` (required): The activity type enum ID
+- `processType` (optional): "AS_IS" or "TO_BE"
+- `directorateIds` (optional): Comma-separated directorate IDs
+- `departmentIds` (optional): Comma-separated department IDs
+- `sectionIds` (optional): Comma-separated section IDs
+- `page` (default: 0)
+- `size` (default: 20)
+- `sortBy` (default: "id")
+- `sortDir` (default: "ASC")
+
+**Response Example:**
+```json
+{
+  "content": [
+    {
+      "activityId": 123,
+      "activityName": {
+        "en": "Review Document",
+        "ar": "مراجعة الوثيقة"
+      },
+      "processId": 456,
+      "processName": {
+        "en": "Document Management",
+        "ar": "إدارة الوثائق"
+      },
+      "processPurpose": "AS_IS",
+      "activityTypeName": {
+        "en": "Review",
+        "ar": "مراجعة"
+      },
+      "ownerOrganization": "Quality Department"
+    }
+  ],
+  "totalElements": 45,
+  "totalPages": 3,
+  "currentPage": 0,
+  "pageSize": 20
+}
+```
+
+**Notes:**
+- Returns paginated list of activities matching the specified activity type
+- Can be filtered by process type (AS_IS/TO_BE)
+- Supports organizational unit filters
+
+---
+
+## 18. Execution Mechanism Distribution AS_IS Details
+
+**Endpoint:** `GET /analytics/process-dashboard/execution-mechanism-distribution-as-is/details`
+
+**Purpose:** Drill into a specific execution mechanism in the AS_IS Execution Mechanism Distribution chart to see all activities using that mechanism.
+
+**Parameters:**
+- `executionMechanism` (required): "MANUAL", "SEMI_AUTOMATED", or "FULLY_AUTOMATED"
+- `directorateIds` (optional): Comma-separated directorate IDs
+- `departmentIds` (optional): Comma-separated department IDs
+- `sectionIds` (optional): Comma-separated section IDs
+- `page` (default: 0)
+- `size` (default: 20)
+- `sortBy` (default: "id")
+- `sortDir` (default: "ASC")
+
+**Response Example:**
+```json
+{
+  "content": [
+    {
+      "activityId": 123,
+      "activityName": {
+        "en": "Manual Data Entry",
+        "ar": "إدخال البيانات يدويًا"
+      },
+      "processId": 456,
+      "processName": {
+        "en": "Data Processing",
+        "ar": "معالجة البيانات"
+      },
+      "executionMechanism": "MANUAL",
+      "ownerOrganization": "Data Entry Department"
+    }
+  ],
+  "totalElements": 32,
+  "totalPages": 2,
+  "currentPage": 0,
+  "pageSize": 20
+}
+```
+
+**Notes:**
+- Shows AS_IS activities only (process_purpose = 1)
+- `executionMechanism`: Execution method for the activity
+- Returns paginated list of activities
+
+---
+
+## 19. Execution Mechanism Distribution TO_BE Details
+
+**Endpoint:** `GET /analytics/process-dashboard/execution-mechanism-distribution-to-be/details`
+
+**Purpose:** Drill into a specific execution mechanism in the TO_BE Execution Mechanism Distribution chart to see all activities using that mechanism.
+
+**Parameters:**
+- `executionMechanism` (required): "MANUAL", "SEMI_AUTOMATED", or "FULLY_AUTOMATED"
+- `directorateIds` (optional): Comma-separated directorate IDs
+- `departmentIds` (optional): Comma-separated department IDs
+- `sectionIds` (optional): Comma-separated section IDs
+- `page` (default: 0)
+- `size` (default: 20)
+- `sortBy` (default: "id")
+- `sortDir` (default: "ASC")
+
+**Response Example:**
+```json
+{
+  "content": [
+    {
+      "activityId": 789,
+      "activityName": {
+        "en": "Automated Data Import",
+        "ar": "استيراد البيانات تلقائيًا"
+      },
+      "processId": 456,
+      "processName": {
+        "en": "Data Processing",
+        "ar": "معالجة البيانات"
+      },
+      "executionMechanism": "FULLY_AUTOMATED",
+      "ownerOrganization": "IT Department"
+    }
+  ],
+  "totalElements": 18,
+  "totalPages": 1,
+  "currentPage": 0,
+  "pageSize": 20
+}
+```
+
+**Notes:**
+- Shows TO_BE activities only (process_purpose = 2)
+- `executionMechanism`: Target execution method for the activity
+- Returns paginated list of activities
+- Useful for tracking automation transformation from AS_IS to TO_BE
