@@ -411,3 +411,254 @@
   }
 }
 ```
+
+---
+
+## 11. Application Utilization Details
+
+**Endpoint:** `GET /analytics/process-dashboard/utilization/details`
+
+**Parameters:**
+- `applicationId` (required): Application ID
+- `processPurpose` (optional): 1 (AS_IS) or 2 (TO_BE)
+- `processIds` (optional): List of process IDs
+- `directorateIds` (optional): List of directorate IDs
+- `departmentIds` (optional): List of department IDs
+- `sectionIds` (optional): List of section IDs
+
+**Response Example:**
+```json
+{
+  "applicationId": 123,
+  "applicationName": {"en": "SAP System", "ar": "نظام ساب"},
+  "directProcesses": [
+    {
+      "processId": 456,
+      "processName": {"en": "Process Name", "ar": "اسم العملية"},
+      "processPurpose": "AS_IS",
+      "ownerOrganization": "Organization Name"
+    }
+  ],
+  "endToEndProcesses": [
+    {
+      "processId": 789,
+      "processName": {"en": "Another Process", "ar": "عملية أخرى"},
+      "processPurpose": "TO_BE",
+      "ownerOrganization": "Organization Name"
+    }
+  ]
+}
+```
+
+---
+
+## 12. Challenge Category Details
+
+**Endpoint:** `GET /analytics/process-dashboard/challenges-by-category/details`
+
+**Parameters:**
+- `challengeCategoryId` (required): Challenge category ID
+- `processPurpose` (optional): 1 (AS_IS) or 2 (TO_BE)
+- `processIds` (optional): List of process IDs
+- `directorateIds` (optional): List of directorate IDs
+- `departmentIds` (optional): List of department IDs
+- `sectionIds` (optional): List of section IDs
+
+**Response Example:**
+```json
+{
+  "challengeCategoryId": 5,
+  "challengeCategoryName": {"en": "Technical Challenges", "ar": "التحديات التقنية"},
+  "directChallenges": [
+    {
+      "challengeId": 101,
+      "challengeName": {"en": "System Integration", "ar": "تكامل النظام"},
+      "processId": 456,
+      "processName": {"en": "Process Name", "ar": "اسم العملية"},
+      "processPurpose": "AS_IS",
+      "ownerOrganization": "IT Department"
+    }
+  ],
+  "endToEndChallenges": [
+    {
+      "challengeId": 102,
+      "challengeName": {"en": "Data Migration", "ar": "ترحيل البيانات"},
+      "processId": 789,
+      "processName": {"en": "Another Process", "ar": "عملية أخرى"},
+      "processPurpose": "TO_BE",
+      "ownerOrganization": "Operations"
+    }
+  ]
+}
+```
+
+---
+
+## 13. Direct vs End-to-End Comparison Details
+
+**Endpoint:** `GET /analytics/process-dashboard/direct-vs-endtoend-comparison/details`
+
+**Purpose:** Drill into a specific process bar in the Direct vs End-to-End comparison chart to see the individual activities with their role information.
+
+**Parameters:**
+- `processId` (required): The specific process ID
+- `processPurpose` (required): 1 for AS_IS, 2 for TO_BE
+- `directorateIds` (optional): Comma-separated directorate IDs
+- `departmentIds` (optional): Comma-separated department IDs
+- `sectionIds` (optional): Comma-separated section IDs
+
+**Response Example:**
+```json
+{
+  "processId": 123,
+  "processName": {
+    "en": "Employee Onboarding",
+    "ar": "إلحاق الموظف",
+    "de": "Mitarbeiter-Onboarding",
+    "fr": "Intégration des employés",
+    "sw": "Uingizaji wa Wafanyakazi"
+  },
+  "processPurpose": "AS_IS",
+  "directItems": [
+    {
+      "itemId": 456,
+      "itemName": {
+        "en": "Review Application",
+        "ar": "مراجعة الطلب"
+      },
+      "sourceProcessId": 123,
+      "sourceProcessName": {
+        "en": "Employee Onboarding",
+        "ar": "إلحاق الموظف"
+      },
+      "roleId": 789,
+      "roleName": {
+        "en": "HR Manager",
+        "ar": "مدير الموارد البشرية"
+      },
+      "assignedOrgUnit": null
+    }
+  ],
+  "endToEndItems": [
+    {
+      "itemId": 457,
+      "itemName": {
+        "en": "Background Check",
+        "ar": "فحص الخلفية"
+      },
+      "sourceProcessId": 124,
+      "sourceProcessName": {
+        "en": "Security Clearance Process",
+        "ar": "عملية التصريح الأمني"
+      },
+      "roleId": 790,
+      "roleName": {
+        "en": "Security Officer",
+        "ar": "ضابط الأمن"
+      },
+      "assignedOrgUnit": null
+    }
+  ]
+}
+```
+
+**Notes:**
+- Always returns activities from `process_activity` table
+- `directItems`: Activities directly attached to the main process
+- `endToEndItems`: Activities from subprocesses (PART_OF_PROCESS) and complementary processes
+- `itemId`: Activity ID
+- `itemName`: Activity name translations
+- `roleId` and `roleName`: Role assigned to the activity
+- `assignedOrgUnit`: Always null for activities
+- `sourceProcessId` and `sourceProcessName`: Indicate which process the activity comes from (useful for end-to-end items)
+
+---
+
+## 14. Execution Time Comparison Details
+
+**Endpoint:** `GET /analytics/process-dashboard/execution-time-comparison/details`
+
+**Purpose:** Drill into a specific process bar in the Execution Time comparison chart to see the individual activities and their processing times.
+
+**Parameters:**
+- `processId` (required): The specific process ID
+- `processPurpose` (required): 1 for AS_IS, 2 for TO_BE
+- `directorateIds` (optional): Comma-separated directorate IDs
+- `departmentIds` (optional): Comma-separated department IDs
+- `sectionIds` (optional): Comma-separated section IDs
+
+**Response Example:**
+```json
+{
+  "processId": 123,
+  "processName": {
+    "en": "Employee Onboarding",
+    "ar": "إلحاق الموظف",
+    "de": "Mitarbeiter-Onboarding",
+    "fr": "Intégration des employés",
+    "sw": "Uingizaji wa Wafanyakazi"
+  },
+  "processPurpose": "AS_IS",
+  "directActivities": [
+    {
+      "activityId": 456,
+      "activityName": {
+        "en": "Review Application",
+        "ar": "مراجعة الطلب"
+      },
+      "sourceProcessId": 123,
+      "sourceProcessName": {
+        "en": "Employee Onboarding",
+        "ar": "إلحاق الموظف"
+      },
+      "processingTime": 2.0,
+      "processingTimeUnit": "DAYS",
+      "netProcessingTime": 0.5,
+      "netProcessingTimeUnit": "DAYS",
+      "probability": 100.0,
+      "roleId": 789,
+      "roleName": {
+        "en": "HR Manager",
+        "ar": "مدير الموارد البشرية"
+      }
+    }
+  ],
+  "endToEndActivities": [
+    {
+      "activityId": 457,
+      "activityName": {
+        "en": "Background Check",
+        "ar": "فحص الخلفية"
+      },
+      "sourceProcessId": 124,
+      "sourceProcessName": {
+        "en": "Security Clearance Process",
+        "ar": "عملية التصريح الأمني"
+      },
+      "processingTime": 5.0,
+      "processingTimeUnit": "DAYS",
+      "netProcessingTime": 1.0,
+      "netProcessingTimeUnit": "DAYS",
+      "probability": 80.0,
+      "roleId": 790,
+      "roleName": {
+        "en": "Security Officer",
+        "ar": "ضابط الأمن"
+      }
+    }
+  ]
+}
+```
+
+**Notes:**
+- `directActivities`: Activities directly attached to the main process
+- `endToEndActivities`: Activities from subprocesses (PART_OF_PROCESS) and complementary processes
+- `processingTime`: Total execution time for the activity
+- `netProcessingTime`: Net/direct processing time (excluding waiting time)
+- `processingTimeUnit`: Time unit - "MINUTES", "HOURS", "DAYS", or "MONTHS"
+- `probability`: Calculated probability (0-100) for the activity occurring
+- Times shown are raw values; convert to days for aggregation using:
+  - MINUTES: divide by 1440
+  - HOURS: divide by 24
+  - DAYS: use as-is
+  - MONTHS: multiply by 30
